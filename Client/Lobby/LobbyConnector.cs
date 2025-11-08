@@ -5,6 +5,10 @@ using Project_AGL.Common.Composition_System;
 
 namespace Project_AGL.Client.Lobby;
 
+
+/// <summary>
+/// The role of this class is, for a client, to connect to a discovered Server
+/// </summary>
 public partial class LobbyConnector : Node
 {
     [Export, Inject] private ServerDiscoveryRequester _serverDiscoveryRequester;

@@ -9,6 +9,9 @@ namespace Project_AGL.Server.Lobby;
 
 using static LobbyConstants;
 
+/// <summary>
+/// The role of this class is to handle client connections.
+/// </summary>
 public partial class Lobby : Node
 {
     [Export, Inject]
