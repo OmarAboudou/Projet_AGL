@@ -22,7 +22,7 @@ public partial class ServerDiscoveryResponder : Node
         try
         {
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
-            UdpClient server = new(SERVER_PORT);
+            using UdpClient server = new(SERVER_PORT);
             Dictionary responseDictionary = new()
             {
                 { "ip", ipAddress },

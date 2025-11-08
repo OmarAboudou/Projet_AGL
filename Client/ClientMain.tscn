@@ -1,10 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://b683j41igtull"]
+[gd_scene load_steps=3 format=3 uid="uid://b683j41igtull"]
 
 [ext_resource type="Script" uid="uid://ckjwrve18x56e" path="res://Client/Server_Discovery/ServerDiscoveryRequester.cs" id="1_mn5l2"]
+[ext_resource type="Script" uid="uid://n4vlm4u8pb3m" path="res://Client/Lobby/LobbyConnector.cs" id="2_uq24m"]
 
 [node name="Main" type="Node"]
 
 [node name="ServerDiscoverRequester" type="Node" parent="."]
 script = ExtResource("1_mn5l2")
 
-[node name="ServerConnecter" type="Node" parent="."]
+[node name="LobbyConnector" type="Node" parent="."]
+script = ExtResource("2_uq24m")

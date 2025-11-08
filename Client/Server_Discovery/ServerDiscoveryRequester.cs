@@ -28,12 +28,12 @@ public partial class ServerDiscoveryRequester : Node
         this.SearchServer();
     }
 
-    public async Task SearchServer()
+    public async void SearchServer()
     {
         try
         {
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
-            UdpClient client = new();
+            using UdpClient client = new();
             client.EnableBroadcast = true;
             IPEndPoint endPoint = new(IPAddress.Broadcast, SERVER_PORT);
             byte[] data = Encoding.ASCII.GetBytes(DISCOVERY_MESSAGE);
@@ -65,13 +65,15 @@ public partial class ServerDiscoveryRequester : Node
                 responseDictionary.ContainsKey("port"))
             {
                 GD.Print($"Client received discovery response {Json.Stringify(responseDictionary)}");
-                this.EmitSignalServerDiscovered(responseDictionary["ip"].AsString(),
-                    responseDictionary["port"].AsInt32());
+                this.EmitSignalServerDiscovered(
+                    responseDictionary["ip"].AsString(),
+                    responseDictionary["port"].AsInt32()
+                );
             }
         }
     }
 
-    private void StopSearchingServer()
+    public void StopSearchingServer()
     {
         this._cancellationTokenSource.CancelAsync();
     }

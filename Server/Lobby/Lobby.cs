@@ -11,8 +11,7 @@ using static LobbyConstants;
 
 public partial class Lobby : Node
 {
-    [Export]
-    [Inject]
+    [Export, Inject]
     private ServerDiscoveryResponder _serverDiscoveryResponder;
     
     public override void _Ready()
