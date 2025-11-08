@@ -13,6 +13,10 @@ config_version=5
 config/name="Project_AGL"
 config/features=PackedStringArray("4.5", "C#", "Mobile")
 
+[autoload]
+
+ComponentSystem="*res://Common/Composition System/ComponentSystem.cs"
+
 [dotnet]
 
 project/assembly_name="Project_AGL"
