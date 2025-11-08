@@ -21,13 +21,7 @@ public partial class ServerDiscoveryRequester : Node
     public delegate void ServerDiscoveredEventHandler(string ipAddress, int port);
     
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-
-    public override void _Ready()
-    {
-        base._Ready();
-        this.SearchServer();
-    }
-
+    
     public async void SearchServer()
     {
         try
