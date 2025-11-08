@@ -24,3 +24,7 @@ folder_colors={
 "res://Shared/": "yellow",
 "res://Tests/": "teal"
 }
+
+[rendering]
+
+renderer/rendering_method="mobile"
