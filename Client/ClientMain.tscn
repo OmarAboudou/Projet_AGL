@@ -6,3 +6,5 @@
 
 [node name="ServerDiscoverRequester" type="Node" parent="."]
 script = ExtResource("1_mn5l2")
+
+[node name="ServerConnecter" type="Node" parent="."]

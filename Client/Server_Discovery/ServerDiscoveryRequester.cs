@@ -12,6 +12,9 @@ namespace Project_AGL.Client.Server_Discovery;
 
 using static ServerConstants;
 
+/// <summary>
+/// The role of this class is to send discovery requests and raise a signal when a server is discovered
+/// </summary>
 public partial class ServerDiscoveryRequester : Node
 {
     [Signal]

@@ -10,17 +10,14 @@ namespace Project_AGL.Server.Server_Discovery;
 
 using static ServerConstants;
 
+/// <summary>
+/// The role of this class is to listen for server requests
+/// </summary>
 public partial class ServerDiscoveryResponder : Node
 {
     private CancellationTokenSource _cancellationTokenSource = new();
 
-    public override void _Ready()
-    {
-        base._Ready();
-        StartRespondingDiscoveryRequests(new ServerInfo("localhost", SERVER_PORT));
-    }
-
-    public async Task StartRespondingDiscoveryRequests(ServerInfo serverInfo)
+    public async Task StartRespondingDiscoveryRequests(string ipAddress, int port)
     {
         try
         {
@@ -28,8 +25,8 @@ public partial class ServerDiscoveryResponder : Node
             UdpClient server = new(SERVER_PORT);
             Dictionary responseDictionary = new()
             {
-                { "ip", serverInfo.ipAddress },
-                { "port", serverInfo.port },
+                { "ip", ipAddress },
+                { "port", port },
             };
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -39,7 +36,7 @@ public partial class ServerDiscoveryResponder : Node
                 {
                     GD.Print("Server received discovery request");
                     byte[] responseData = Json.Stringify(responseDictionary).ToUtf8Buffer();
-                    GD.Print($"Server send discovery response {serverInfo.ipAddress}:{serverInfo.port}");
+                    GD.Print($"Server send discovery response {ipAddress}:{port}");
                     await server.SendAsync(responseData, result.RemoteEndPoint, cancellationToken);
                 }
             }
