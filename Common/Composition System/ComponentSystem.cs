@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Composition.Composition_System;
 using Composition.Utils;
 using Godot;
 using Godot.Collections;
 
-namespace Composition.Composition_System;
+namespace Project_AGL.Common.Composition_System;
 
 [Tool]
 public partial class ComponentSystem : Node
@@ -230,7 +231,7 @@ public partial class ComponentSystem : Node
             if (!parent.IsInGroup(ParentOfDependantsGroupName))
             {
                 parent.AddToGroup(ParentOfDependantsGroupName);
-                parent.ChildOrderChanged += ParentOnChildOrderChanged;
+                parent.ChildOrderChanged += this.ParentOnChildOrderChanged;
             }
         }
         else
@@ -238,7 +239,7 @@ public partial class ComponentSystem : Node
             if (parent.IsInGroup(ParentOfDependantsGroupName))
             {
                 parent.RemoveFromGroup(ParentOfDependantsGroupName);
-                parent.ChildOrderChanged -= ParentOnChildOrderChanged;
+                parent.ChildOrderChanged -= this.ParentOnChildOrderChanged;
             }
         }
     }
@@ -249,7 +250,7 @@ public partial class ComponentSystem : Node
         {
             if (parent.GetChildCount() <= 0)
             {
-                UpdateParentInGroup(parent);
+                this.UpdateParentInGroup(parent);
                 continue;
             }
             
@@ -257,7 +258,7 @@ public partial class ComponentSystem : Node
             {
                 if (child.IsInGroup(DependantNodesGroupName))
                 {
-                    UpdateDependencies(child);
+                    this.UpdateDependencies(child);
                 }
             }    
         }
