@@ -32,12 +32,30 @@ public partial class ComponentSystem : Node
         }
         if(dependantType == null) return;
         
+        Type parentType = parent.GetType();
+        if (Engine.IsEditorHint())
+        {
+            parentType = (parent.GetScript().Obj as Script)?.GetScriptType() ?? parent.GetType();
+        }
+
+        IEnumerable<FieldInfo> injectParentFieldInfos = GetInjectParentFieldInfo(dependantType);
+        foreach (FieldInfo injectParentFieldInfo in injectParentFieldInfos)
+        {
+            TryInjectParentField(dependant, injectParentFieldInfo, parent, parentType);
+        }
+        
         IEnumerable<FieldInfo> injectFieldInfos = GetInjectFieldInfos(dependantType);
         Array<Node> siblings = parent.GetChildren();
         
         foreach (FieldInfo injectFieldInfo in injectFieldInfos)
         {
             TryInjectField(dependant, injectFieldInfo, siblings);
+        }
+        
+        IEnumerable<PropertyInfo> injectParentPropertyInfos = GetInjectParentPropertyInfos(dependantType);
+        foreach (PropertyInfo injectParentPropertyInfo in injectParentPropertyInfos)
+        {
+            this.TryInjectParentProperty(dependant, injectParentPropertyInfo, parent, parentType);
         }
         
         IEnumerable<PropertyInfo>  injectPropertyInfos = GetInjectPropertyInfos(dependantType);
@@ -49,6 +67,30 @@ public partial class ComponentSystem : Node
         
         this.UpdateParentInGroup(parent);
     }
+
+    private void TryInjectParentProperty(Node dependant, PropertyInfo injectParentPropertyInfo, Node parent, Type parentType)
+    {
+        if (injectParentPropertyInfo.PropertyType.IsAssignableFrom(parentType))
+        {
+            dependant.Set(injectParentPropertyInfo.Name, parent);
+        }
+        else
+        {
+            GD.PrintErr($"{dependant.Name} requires a parent of type {injectParentPropertyInfo.PropertyType.Name}");
+        }
+    }
+    private void TryInjectParentField(Node dependant, FieldInfo injectParentFieldInfo, Node parent, Type parentType)
+    {
+        if (injectParentFieldInfo.FieldType.IsAssignableFrom(parentType))
+        {
+            dependant.Set(injectParentFieldInfo.Name, parent);
+        }
+        else
+        {
+            GD.PrintErr($"{dependant.Name} requires a parent of type {injectParentFieldInfo.FieldType.Name}");
+        }
+    }
+
 
     private static void TryInjectProperty(Node dependant, PropertyInfo injectPropertyInfo, Array<Node> siblings)
     {
@@ -163,6 +205,20 @@ public partial class ComponentSystem : Node
         return dependantType
             .GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
             .Where(f => f.IsDefined(typeof(InjectAttribute), true));
+    }
+    
+    private static IEnumerable<PropertyInfo> GetInjectParentPropertyInfos(Type dependantType)
+    {
+        return dependantType
+            .GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
+            .Where(f => f.IsDefined(typeof(InjectParentAttribute), true));
+    }
+    
+    private IEnumerable<FieldInfo> GetInjectParentFieldInfo(Type dependantType)
+    {
+        return dependantType
+            .GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
+            .Where(f => f.IsDefined(typeof(InjectParentAttribute), true));
     }
 
     private void UpdateParentInGroup(Node parent)
