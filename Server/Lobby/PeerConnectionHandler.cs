@@ -10,10 +10,17 @@ namespace Project_AGL.Server.Lobby;
 using static LobbyConstants;
 
 /// <summary>
-/// The role of this class is to handle client connections.
+/// The role of this class is to peer connections.
 /// </summary>
-public partial class Lobby : Node
+public partial class PeerConnectionHandler : Node
 {
+    [Signal]
+    public delegate void PeerConnectedEventHandler(long id); 
+    
+    [Signal]
+    public delegate void PeerDisconnectedEventHandler(long id); 
+    
+    
     [Export, Inject]
     private ServerDiscoveryResponder _serverDiscoveryResponder;
     
@@ -40,12 +47,12 @@ public partial class Lobby : Node
 
     private void MultiplayerOnPeerDisconnected(long id)
     {
-        
+        this.EmitSignalPeerConnected(id);
     }
 
     private void MultiplayerOnPeerConnected(long id)
     {
-        GD.Print($"NEW PEER WITH ID {id}");
+        this.EmitSignalPeerDisconnected(id);
     }
     
 
