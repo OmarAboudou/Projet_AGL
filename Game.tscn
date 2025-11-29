@@ -1,0 +1,95 @@
+[gd_scene load_steps=9 format=3 uid="uid://cabaxdwkysgff"]
+
+[ext_resource type="Script" uid="uid://dmdufo3w8iyyg" path="res://UI.cs" id="1_sb48q"]
+[ext_resource type="Script" uid="uid://cwaid6xd7rnwn" path="res://src/Lobby/LobbySelector.cs" id="1_u44n3"]
+[ext_resource type="Script" path="res://src/Server/ServerDiscoveryRequester.cs" id="2_sb48q"]
+[ext_resource type="Script" path="res://src/Server/ServerDiscoveryResponder.cs" id="3_t88pq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r0du0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r0du0"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_r0du0"]
+font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_cm0pq"]
+font_size = 35
+
+[node name="Game" type="Node"]
+
+[node name="World2D" type="Node2D" parent="."]
+
+[node name="UI" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_r0du0")
+script = ExtResource("1_sb48q")
+
+[node name="SplashScreen" type="PanelContainer" parent="UI"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_r0du0")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/SplashScreen"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/SplashScreen/MarginContainer"]
+layout_mode = 2
+
+[node name="Titre" type="Label" parent="UI/SplashScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "{TITRE}"
+label_settings = SubResource("LabelSettings_r0du0")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="APPUYER SUR UNE TOUCHE" type="Label" parent="UI/SplashScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "{APPUYER SUR UNE TOUCHE}"
+label_settings = SubResource("LabelSettings_cm0pq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MainMenu" type="PanelContainer" parent="UI"]
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="HostLobbyButton" type="Button" parent="UI/MainMenu/VBoxContainer"]
+layout_mode = 2
+text = "Host Lobby"
+
+[node name="JoinLobbyButton" type="Button" parent="UI/MainMenu/VBoxContainer"]
+layout_mode = 2
+text = "Join Lobby"
+
+[node name="LobbyMenu" type="PanelContainer" parent="UI"]
+visible = false
+layout_mode = 2
+
+[node name="LobbySelector" type="Node" parent="." node_paths=PackedStringArray("_serverDiscoveryRequester", "_serverDiscoveryResponder")]
+script = ExtResource("1_u44n3")
+_serverDiscoveryRequester = NodePath("../ServerDiscoveryRequester")
+_serverDiscoveryResponder = NodePath("../ServerDiscoveryResponder")
+
+[node name="ServerDiscoveryRequester" type="Node" parent="."]
+script = ExtResource("2_sb48q")
+
+[node name="ServerDiscoveryResponder" type="Node" parent="."]
+script = ExtResource("3_t88pq")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://test.tscn")
+spawn_path = NodePath("..")
+
+[connection signal="pressed" from="UI/MainMenu/VBoxContainer/HostLobbyButton" to="LobbySelector" method="HostLobby"]
+[connection signal="pressed" from="UI/MainMenu/VBoxContainer/JoinLobbyButton" to="LobbySelector" method="JoinLobby"]
