@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Project_AGL"
+run/main_scene="uid://cabaxdwkysgff"
 config/features=PackedStringArray("4.5", "C#", "Mobile")
 
 [autoload]
@@ -25,8 +26,8 @@ project/assembly_name="Project_AGL"
 
 folder_colors={
 "res://Common/": "pink",
-"res://Shared/": "yellow",
-"res://Tests/": "teal"
+"res://Tests/": "teal",
+"res://src/": "blue"
 }
 
 [rendering]

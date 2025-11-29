@@ -4,4 +4,11 @@
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Client\Client.tscn" />
+    <Content Include="Client\Server_Discovery\ServerDiscoveryRequester.cs.uid" />
+    <Content Include="Server\Server.tscn" />
+    <Content Include="Server\Server_Discovery\.gitkeep" />
+    <Content Include="Server\Server_Discovery\ServerDiscoveryResponder.cs.uid" />
+  </ItemGroup>
 </Project>
