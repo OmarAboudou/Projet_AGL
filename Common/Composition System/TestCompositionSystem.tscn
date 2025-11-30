@@ -6,8 +6,13 @@
 
 [node name="CloseParent" type="Node" parent="."]
 
-[node name="Self" type="Node3D" parent="CloseParent"]
+[node name="Self" type="Node3D" parent="CloseParent" node_paths=PackedStringArray("_child", "_sibling", "_parent", "_ancestor", "_parentSibling")]
 script = ExtResource("1_tllo2")
+_child = NodePath("Child")
+_sibling = NodePath("../Sibling")
+_parent = NodePath("..")
+_ancestor = NodePath("../..")
+_parentSibling = NodePath("../../ParentSibling")
 
 [node name="Child" type="CSGBox3D" parent="CloseParent/Self"]
 

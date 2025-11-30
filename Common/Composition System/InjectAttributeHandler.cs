@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -57,7 +58,6 @@ where TAttribute : InjectAttribute, new()
     private void Inject(Node injected, FieldInfo injectedFieldInfo)
     {
         ImmutableArray<InjectAttribute> injectAttributes = [..injectedFieldInfo.GetCustomAttributes<InjectAttribute>()];
-        
         if(injectAttributes.Length <= 0) return;
 
         List<Node> candidates = new();
@@ -69,25 +69,50 @@ where TAttribute : InjectAttribute, new()
             index++;
         }
         
-        List<Node> validCandidates = 
-            candidates
-                .Where(c => c.GetNodeType().IsAssignableTo(injectedFieldInfo.FieldType))
-                .ToList();
-
-        if (validCandidates.Count <= 0)
-        {
-            GD.PrintErr($"Couldn't find any candidate for field {injected.Name}.{injectedFieldInfo.Name}");
-            injected.ClearField(injectedFieldInfo);
-            return;
-        }
+        Type validCandidateType = injectedFieldInfo.FieldType;
         
-        if (validCandidates.Count > 1)
+        Type[] interfaces = validCandidateType .GetInterfaces();
+        Type genericType = null;
+
+        foreach (Type i in interfaces)
         {
-            GD.PushWarning($"Multiple candidates for field {injected.Name}.{injectedFieldInfo.Name}");
+            if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>))
+            {
+                genericType = i.GetGenericArguments()[0];
+                break;
+            }
         }
-        Node injection = validCandidates[0];
-        injected.SetField(injection, injectedFieldInfo);
-        GD.Print($"Injected {injection.Name} into field {injected.Name}.{injectedFieldInfo.Name}");
+
+        bool implementsICollection = genericType != null;
+        
+        if (implementsICollection)
+        {
+            // TODO Set as a collection
+            GD.Print($"{injectedFieldInfo.Name} is collection type field of elements of type : {genericType.Name}.");
+        }
+        else
+        {
+            // TODO Set as a non-collection-type
+            List<Node> validCandidates = 
+                candidates
+                    .Where(c => c.GetNodeType().IsAssignableTo(validCandidateType))
+                    .ToList();
+
+            if (validCandidates.Count <= 0)
+            {
+                GD.PrintErr($"Couldn't find any candidate for field {injected.Name}.{injectedFieldInfo.Name}");
+                injected.ClearField(injectedFieldInfo);
+                return;
+            }
+        
+            if (validCandidates.Count > 1)
+            {
+                GD.PushWarning($"Multiple candidates for field {injected.Name}.{injectedFieldInfo.Name}");
+            }
+            Node injection = validCandidates[0];
+            injected.SetField(injection, injectedFieldInfo);
+            GD.Print($"Injected {injection.Name} into field {injected.Name}.{injectedFieldInfo.Name}");
+        }
         
     }
 
@@ -115,25 +140,50 @@ where TAttribute : InjectAttribute, new()
             index++;
         }
         
-        List<Node> validCandidates = 
-            candidates
-                .Where(c => c.GetNodeType().IsAssignableTo(injectedPropertyInfo.PropertyType))
-                .ToList();
+        Type validCandidateType = injectedPropertyInfo.PropertyType;
+        
+        Type[] interfaces = validCandidateType .GetInterfaces();
+        Type genericType = null;
 
-        if (validCandidates.Count <= 0)
+        foreach (Type i in interfaces)
         {
-            GD.PrintErr($"Couldn't find any candidate for property {injected.Name}.{injectedPropertyInfo.Name}");
-            injected.ClearProperty(injectedPropertyInfo);
-            return;
+            if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>))
+            {
+                genericType = i.GetGenericArguments()[0];
+                break;
+            }
+        }
+
+        bool implementsICollection = genericType != null;
+        
+        if (implementsICollection)
+        {
+            // TODO Set as a collection
+            GD.Print($"{injectedPropertyInfo.Name} is collection type field of elements of type : {genericType.Name}.");
+        }
+        else
+        {
+            List<Node> validCandidates = 
+                candidates
+                    .Where(c => c.GetNodeType().IsAssignableTo(validCandidateType))
+                    .ToList();
+
+            if (validCandidates.Count <= 0)
+            {
+                GD.PrintErr($"Couldn't find any candidate for property {injected.Name}.{injectedPropertyInfo.Name}");
+                injected.ClearProperty(injectedPropertyInfo);
+                return;
+            }
+        
+            if (validCandidates.Count > 1)
+            {
+                GD.PushWarning($"Multiple candidates for property {injected.Name}.{injectedPropertyInfo.Name}");
+            }
+            Node injection = validCandidates[0];
+            injected.SetProperty(injection, injectedPropertyInfo);
+            GD.Print($"Injected {injection.Name} into property {injected.Name}.{injectedPropertyInfo.Name}");
         }
         
-        if (validCandidates.Count > 1)
-        {
-            GD.PushWarning($"Multiple candidates for property {injected.Name}.{injectedPropertyInfo.Name}");
-        }
-        Node injection = validCandidates[0];
-        injected.SetProperty(injection, injectedPropertyInfo);
-        GD.Print($"Injected {injection.Name} into property {injected.Name}.{injectedPropertyInfo.Name}");
     }
 
     private void OnNodeAdded(Node node)

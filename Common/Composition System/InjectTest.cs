@@ -1,5 +1,6 @@
 using Common.Composition_System.Inject_Attributes;
 using Godot;
+using Godot.Collections;
 
 namespace Common.Composition_System;
 
@@ -10,4 +11,5 @@ public partial class InjectTest : Node
     [Export, InjectParent] private Node _parent;
     [Export, InjectAncestor] private Node2D _ancestor;
     [Export, InjectParentSibling] private CanvasModulate _parentSibling;
+    [Export, InjectChild, InjectAncestor] private Array<Node> _children_and_parents = new();
 }
