@@ -1,4 +1,1 @@
-.git/
-.godot/
-.idea/
-*.sln.DotSettings.user
+*.uid
