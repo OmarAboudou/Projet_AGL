@@ -7,6 +7,12 @@
   <ItemGroup>
     <Content Include="Client\Client.tscn" />
     <Content Include="Client\Server_Discovery\ServerDiscoveryRequester.cs.uid" />
+    <Content Include="Common\.gitkeep" />
+    <Content Include="Common\Composition System\ComponentSystem.cs.uid" />
+    <Content Include="Common\Composition System\InjectAttribute.cs.uid" />
+    <Content Include="Common\Composition System\InjectParentAttribute.cs.uid" />
+    <Content Include="Common\README.md" />
+    <Content Include="Common\Utils\Utils.cs.uid" />
     <Content Include="Server\Server.tscn" />
     <Content Include="Server\Server_Discovery\.gitkeep" />
     <Content Include="Server\Server_Discovery\ServerDiscoveryResponder.cs.uid" />
