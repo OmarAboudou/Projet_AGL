@@ -1,15 +1,13 @@
-using Composition.Composition_System.Inject_Ancestor;
-using Composition.Composition_System.Inject_Child;
-using Composition.Composition_System.Inject_Parent;
-using Composition.Composition_System.Inject_Sibling;
+using Composition.Composition_System.Inject_Attributes;
 using Godot;
 
 namespace Composition.Composition_System;
 
 public partial class InjectTest : Node
 {
-    [Export, InjectAncestor] private Node2D _ancestor;
-    [Export, InjectSibling] private Node _sibling;
+    [Export, InjectChild] private CsgBox3D _child;
+    [Export, InjectSibling] private Control _sibling;
     [Export, InjectParent] private Node _parent;
-    [Export, InjectChild] private Node _child;
+    [Export, InjectAncestor] private Node2D _ancestor;
+    [Export, InjectParentSibling] private CanvasModulate _parentSibling;
 }

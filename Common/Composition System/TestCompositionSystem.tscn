@@ -2,16 +2,21 @@
 
 [ext_resource type="Script" uid="uid://ch8acq5gwbcpf" path="res://Composition System/InjectTest.cs" id="1_tllo2"]
 
-[node name="TestCompositionSystem" type="Node2D"]
+[node name="FarParent" type="Node2D"]
 
-[node name="Node3" type="Node" parent="."]
+[node name="CloseParent" type="Node" parent="."]
 
-[node name="Node" type="Node" parent="Node3" node_paths=PackedStringArray("_sibling", "_parent", "_child")]
+[node name="Self" type="Node3D" parent="CloseParent" node_paths=PackedStringArray("_child", "_sibling", "_parent", "_ancestor")]
 script = ExtResource("1_tllo2")
-_sibling = NodePath("../Node2")
+_child = NodePath("Child")
+_sibling = NodePath("../Sibling")
 _parent = NodePath("..")
-_child = NodePath("Node")
+_ancestor = NodePath("../..")
 
-[node name="Node" type="Node" parent="Node3/Node"]
+[node name="Child" type="CSGBox3D" parent="CloseParent/Self"]
 
-[node name="Node2" type="Node" parent="Node3"]
+[node name="Sibling" type="Control" parent="CloseParent"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="ParentSibling" type="CanvasModulate" parent="."]

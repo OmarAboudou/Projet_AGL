@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Composition.Composition_System.Inject;
+using Composition.Composition_System.Inject_Attributes;
 using Godot;
 
 namespace Composition.Composition_System;
@@ -12,15 +12,16 @@ public partial class CompositionSystem : Node
     public override void _EnterTree()
     {
         base._EnterTree();
-        Type[] injectAttributeHandlerTypes = 
-            typeof(InjectAttributeHandler)
+        Type[] injectAttributeTypes = 
+            typeof(InjectAttribute)
                 .Assembly
                 .GetTypes()
-                .Where(t => t.IsAssignableTo(typeof(InjectAttributeHandler)) && !t.IsAbstract && !t.IsInterface)
-                .ToArray();;
-        foreach (Type type in injectAttributeHandlerTypes)
+                .Where(t => t.IsAssignableTo(typeof(InjectAttribute)) && !t.IsAbstract && !t.IsInterface)
+                .ToArray();
+        foreach (Type injectAttributeType in injectAttributeTypes)
         {
-            Node instance = (Node)Activator.CreateInstance(type);
+            Type injectAttributeHandlerType = typeof(InjectAttributeHandler<>).MakeGenericType(injectAttributeType);
+            Node instance = (Node) Activator.CreateInstance(injectAttributeHandlerType);
             this.AddChild(instance);
         }
     }
