@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://gdr62if74xo1"]
+
+[ext_resource type="Script" uid="uid://ch8acq5gwbcpf" path="res://Composition System/InjectTest.cs" id="1_tllo2"]
+
+[node name="FarParent" type="Node2D"]
+
+[node name="CloseParent" type="Node" parent="."]
+
+[node name="Self" type="Node3D" parent="CloseParent" node_paths=PackedStringArray("_child", "_sibling", "_parent", "_ancestor", "_parentSibling")]
+script = ExtResource("1_tllo2")
+_child = NodePath("Child")
+_sibling = NodePath("../Sibling")
+_parent = NodePath("..")
+_ancestor = NodePath("../..")
+_parentSibling = NodePath("../../ParentSibling")
+
+[node name="Child" type="CSGBox3D" parent="CloseParent/Self"]
+
+[node name="Sibling" type="Control" parent="CloseParent"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="ParentSibling" type="CanvasModulate" parent="."]
