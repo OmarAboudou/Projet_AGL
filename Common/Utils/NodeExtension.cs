@@ -64,4 +64,15 @@ public static class NodeExtension
             node.Set(propertyInfo.Name, default);
         }
     }
+
+    public static void SetAllProcessing(this Node node, bool enabled)
+    {
+        node.SetProcess(enabled);
+        node.SetPhysicsProcess(enabled);
+        
+        node.SetProcessInput(enabled);
+        node.SetProcessShortcutInput(enabled);
+        node.SetProcessUnhandledInput(enabled);
+        node.SetProcessUnhandledKeyInput(enabled);
+    }
 }
