@@ -1,12 +1,20 @@
+using Common.Utils;
 using Godot;
 
 namespace Game_System;
 
 public abstract partial class GameState : Node
 {
+    public override void _Ready()
+    {
+        base._Ready();
+        this.SetAllProcessing(false);
+    }
+
     public void EnterState()
     {
         this._EnterState();
+        this.SetAllProcessing(true);
         this.EmitSignalStateEntered();
     }
 
@@ -15,6 +23,7 @@ public abstract partial class GameState : Node
     public void ExitState()
     {
         this._ExitState();
+        this.SetAllProcessing(false);
         this.EmitSignalStateExited();
     }
 

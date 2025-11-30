@@ -10,7 +10,13 @@ public partial class GameStateSystem : Node
 {
     [Export, InjectChild] private Array<GameState> _states = new(); 
     private GameState _currentState;
-    
+
+    public override void _Ready()
+    {
+        base._Ready();
+        this.ChangeState<GameState>();
+    }
+
     public List<GameState> GetStates()
     {
         return this._states.ToList();    
@@ -21,7 +27,7 @@ public partial class GameStateSystem : Node
         return this._currentState;
     }
     
-    public void ChangeState<T>() where T : GameState, new()
+    public void ChangeState<T>() where T : GameState
     {
         if (this._currentState != null)
         {
