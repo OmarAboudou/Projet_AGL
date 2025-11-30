@@ -50,10 +50,6 @@ where TAttribute : InjectAttribute, new()
         List<FieldInfo> injectedFieldInfos = this.GetInjectedFields(nodeType);
         foreach (FieldInfo injectedFieldInfo in injectedFieldInfos)
         {
-            /*InjectAttribute attribute = injectedFieldInfo.GetCustomAttribute<InjectAttribute>();
-
-            if (attribute != null) attribute.Inject(injected, injectedFieldInfo);*/
-            
             this.Inject(injected, injectedFieldInfo);
         }
     }
@@ -61,6 +57,7 @@ where TAttribute : InjectAttribute, new()
     private void Inject(Node injected, FieldInfo injectedFieldInfo)
     {
         ImmutableArray<InjectAttribute> injectAttributes = [..injectedFieldInfo.GetCustomAttributes<InjectAttribute>()];
+        
         if(injectAttributes.Length <= 0) return;
 
         List<Node> candidates = new();
@@ -68,7 +65,7 @@ where TAttribute : InjectAttribute, new()
         while (index < injectAttributes.Length)
         {
             InjectAttribute injectAttribute = injectAttributes[index];
-            candidates.AddRange(injectAttribute.ProcessAttributes(injected, injectedFieldInfo, ref index, injectAttributes));
+            candidates.AddRange(injectAttribute.ProcessAttributes(injected, ref index, injectAttributes));
             index++;
         }
         
@@ -99,9 +96,6 @@ where TAttribute : InjectAttribute, new()
         List<PropertyInfo> injectedPropertyInfos = this.GetInjectedProperties(nodeType);
         foreach (PropertyInfo injectedPropertyInfo in injectedPropertyInfos)
         {
-            /*InjectAttribute attribute = injectedPropertyInfo.GetCustomAttribute<InjectAttribute>();
-
-            if (attribute != null) attribute.Inject(injected, injectedPropertyInfo);*/
             
             this.Inject(injected, injectedPropertyInfo);
         }
@@ -117,7 +111,7 @@ where TAttribute : InjectAttribute, new()
         while (index < injectAttributes.Length)
         {
             InjectAttribute injectAttribute = injectAttributes[index];
-            candidates.AddRange(injectAttribute.ProcessAttributes(injected, injectedPropertyInfo, ref index, injectAttributes));
+            candidates.AddRange(injectAttribute.ProcessAttributes(injected, ref index, injectAttributes));
             index++;
         }
         
