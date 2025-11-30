@@ -1,12 +1,16 @@
 # Composition System
 
+---
 ## Injections
 
 System that allows for automatically searching and injecting node(s) 
 from the surrounding of the current node. 
 
-The considered surrounding is determined by the attributes used 
+The considered surrounding is determined by the **InjectAttributes** used 
 on the field or property.
+
+When using multiple **InjectAttributes** on a field, the considered surrounding is
+the union of every surroundings of every **InjectAttributes**.
 
 ### Attributes
 
@@ -26,7 +30,7 @@ the injection.
 
 **The field or property must not be equal to null** but should be initialized to empty.
 
-#### Exemple : 
+#### Exemple
 
 ```csharp
 public partial class SomeNode : Node
@@ -40,3 +44,11 @@ public partial class SomeNode : Node
     // ...
 }
 ```
+
+---
+
+## Overview
+
+For an overview of what is possible using **InjectAttributes**, 
+please consider checking the ***"InjectTest.tscn"*** scene 
+and ***"InjectTest.cs"*** script.
