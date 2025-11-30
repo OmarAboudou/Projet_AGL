@@ -1,10 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://bag873io4pxyi"]
+[gd_scene load_steps=2 format=3 uid="uid://bag873io4pxyi"]
 
 [ext_resource type="Script" uid="uid://3inyh28erjsa" path="res://Composition System/CompositionSystem.cs" id="1_4fl5b"]
-[ext_resource type="Script" uid="uid://bk0t5r4xpeanq" path="res://Composition System/Inject Child/InjectChildAttributeHandler.cs" id="2_jk1c4"]
-[ext_resource type="Script" uid="uid://dimhnfh3jo7wg" path="res://Composition System/Inject Parent/InjectParentAttributeHandler.cs" id="3_m3uu1"]
-[ext_resource type="Script" uid="uid://cpqpyuf4mm3cr" path="res://Composition System/Inject Sibling/InjectSiblingAttributeHandler.cs" id="4_r8mrt"]
 
 [node name="CompositionSystem" type="Node"]
 script = ExtResource("1_4fl5b")
-_scriptsToInstantiate = Array[CSharpScript]([ExtResource("2_jk1c4"), ExtResource("3_m3uu1"), ExtResource("4_r8mrt")])

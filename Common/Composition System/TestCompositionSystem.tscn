@@ -2,14 +2,16 @@
 
 [ext_resource type="Script" uid="uid://ch8acq5gwbcpf" path="res://Composition System/InjectTest.cs" id="1_tllo2"]
 
-[node name="TestCompositionSystem" type="Node"]
+[node name="TestCompositionSystem" type="Node2D"]
 
-[node name="Node" type="Node" parent="." node_paths=PackedStringArray("_sibling", "_parent", "_child")]
+[node name="Node3" type="Node" parent="."]
+
+[node name="Node" type="Node" parent="Node3" node_paths=PackedStringArray("_sibling", "_parent", "_child")]
 script = ExtResource("1_tllo2")
 _sibling = NodePath("../Node2")
 _parent = NodePath("..")
 _child = NodePath("Node")
 
-[node name="Node" type="Node" parent="Node"]
+[node name="Node" type="Node" parent="Node3/Node"]
 
-[node name="Node2" type="Node" parent="."]
+[node name="Node2" type="Node" parent="Node3"]
