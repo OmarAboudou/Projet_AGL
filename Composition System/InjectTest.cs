@@ -1,7 +1,7 @@
-using common_project.Composition_System.Inject_Attributes;
+using Common.Composition_System.Inject_Attributes;
 using Godot;
 
-namespace common_project.Composition_System;
+namespace Common.Composition_System;
 
 public partial class InjectTest : Node
 {

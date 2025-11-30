@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using common_project.Utils;
+using Common.Utils;
 using Godot;
 
-namespace common_project.Composition_System.Inject_Attributes;
+namespace Common.Composition_System.Inject_Attributes;
 
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public abstract class InjectAttribute : Attribute

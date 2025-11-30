@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using Godot;
 
-namespace common_project.Utils;
+namespace Common.Utils;
 
 public static class NodeExtension
 {

@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace common_project.Utils;
+namespace Common.Utils;
 
 public static class Utils
 {

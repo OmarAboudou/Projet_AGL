@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using common_project.Composition_System.Inject_Attributes;
-using common_project.Utils;
+using Common.Utils;
+using Common.Composition_System.Inject_Attributes;
 using Godot;
 
-namespace common_project.Composition_System;
+namespace Common.Composition_System;
 
 [Tool]
 public partial class InjectAttributeHandler<TAttribute> : Node

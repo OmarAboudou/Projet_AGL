@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-namespace common_project.Composition_System.Inject_Attributes;
+namespace Common.Composition_System.Inject_Attributes;
 
 public class InjectParentAttribute : InjectAttribute 
 {
