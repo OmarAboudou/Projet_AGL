@@ -17,11 +17,16 @@ public static class NodeExtension
         return nodeType;
     }
     
-    public static void SetField(this Node node, Variant value, FieldInfo fieldInfo)
+    public static object GetFieldValue(this Node node, FieldInfo fieldInfo)
+    {
+        return !Engine.IsEditorHint() ? fieldInfo.GetValue(node) : node.Get(fieldInfo.Name).Obj;
+    }
+
+    public static void SetFieldValue(this Node node, Variant value, FieldInfo fieldInfo)
     {
         if (!Engine.IsEditorHint())
         {
-            fieldInfo.SetValue(node, value);
+            fieldInfo.SetValue(node, value.Obj);
         }
         else
         {
@@ -41,11 +46,16 @@ public static class NodeExtension
         }
     }
 
-    public static void SetProperty(this Node node, Variant value, PropertyInfo propertyInfo)
+    public static object GetPropertyValue(this Node node, PropertyInfo propertyInfo)
+    {
+        return !Engine.IsEditorHint() ? propertyInfo.GetValue(node) : node.Get(propertyInfo.Name).Obj;
+    }
+    
+    public static void SetPropertyValue(this Node node, Variant value, PropertyInfo propertyInfo)
     {
         if (!Engine.IsEditorHint())
         {
-            propertyInfo.SetValue(node, value);
+            propertyInfo.SetValue(node, value.Obj);
         }
         else
         {

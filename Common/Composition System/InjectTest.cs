@@ -6,10 +6,20 @@ namespace Common.Composition_System;
 
 public partial class InjectTest : Node
 {
-    [Export, InjectChild] private CsgBox3D _child;
-    [Export, InjectSibling] private Control _sibling;
-    [Export, InjectParent] private Node _parent;
-    [Export, InjectAncestor] private Node2D _ancestor;
-    [Export, InjectParentSibling] private CanvasModulate _parentSibling;
-    [Export, InjectChild, InjectAncestor] private Array<Node> _children_and_parents = new();
+    [ExportGroup("Fields")]
+    [Export, InjectChild] private CsgBox3D _childField;
+    [Export, InjectSibling] private Control _siblingField;
+    [Export, InjectParent] private Node _parentField;
+    [Export, InjectAncestor] private Node2D _ancestorField;
+    [Export, InjectParentSibling] private CanvasModulate _parentSiblingField;
+    [Export, InjectChild, InjectAncestor] private Array<CanvasItem> _childrenAndParentsField = new();
+
+    [ExportGroup("Properties")]
+    [Export, InjectChild] private CsgBox3D ChildProperty { get; set; }
+    [Export, InjectSibling] private Control SiblingProperty { get; set; }
+    [Export, InjectParent] private Node ParentProperty { get; set; }
+    [Export, InjectAncestor] private Node2D AncestorProperty { get; set; }
+    [Export, InjectParentSibling] private CanvasModulate ParentSiblingProperty { get; set; }
+    [Export, InjectChild, InjectAncestor] private Array<CanvasItem> ChildrenAndParentsProperty { get; set; } = new();
+
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -65,13 +64,31 @@ where TAttribute : InjectAttribute, new()
         while (index < injectAttributes.Length)
         {
             InjectAttribute injectAttribute = injectAttributes[index];
-            candidates.AddRange(injectAttribute.ProcessAttributes(injected, ref index, injectAttributes));
+            List<Node> newCandidates = injectAttribute.ProcessAttributes(injected, ref index, injectAttributes);
+            newCandidates.ForEach(newCandidate =>
+            {
+                if (!candidates.Contains(newCandidate))
+                {
+                    if (Engine.IsEditorHint() )
+                    {
+                        if (!newCandidate.IsPartOfEditedScene())
+                        {
+                            Node owner = newCandidate.GetOwner();
+                            if (owner == null || !owner.IsPartOfEditedScene())
+                            {
+                                return;   
+                            }
+                        }
+                    }
+                    candidates.Add(newCandidate);
+                }
+            });
             index++;
         }
         
         Type validCandidateType = injectedFieldInfo.FieldType;
         
-        Type[] interfaces = validCandidateType .GetInterfaces();
+        Type[] interfaces = validCandidateType.GetInterfaces();
         Type genericType = null;
 
         foreach (Type i in interfaces)
@@ -87,12 +104,45 @@ where TAttribute : InjectAttribute, new()
         
         if (implementsICollection)
         {
-            // TODO Set as a collection
             GD.Print($"{injectedFieldInfo.Name} is collection type field of elements of type : {genericType.Name}.");
+            List<Node> validCandidates = 
+                candidates
+                    .Where(c => c.GetNodeType().IsAssignableTo(genericType))
+                    .ToList();
+            
+            object collectionInstance = injected.GetFieldValue(injectedFieldInfo);
+            
+            if (collectionInstance == null)
+            {
+                GD.PrintErr($"Collection field : {injectedFieldInfo.Name} must be initialized for injection to work.");
+                return;  
+            }
+            
+            Type collectionType = collectionInstance.GetType();
+
+            collectionType
+                .GetMethod(nameof(ICollection<int>.Clear))
+                ?.Invoke(collectionInstance, []);
+            
+            foreach (Node validCandidate in validCandidates)
+            {
+                object transformedValidCandidate = null;
+                if (collectionType == typeof(Godot.Collections.Array))
+                {
+                    transformedValidCandidate = Variant.CreateFrom(validCandidate);
+                }
+                else
+                {
+                    transformedValidCandidate = validCandidate;
+                }
+                collectionType
+                    .GetMethod(nameof(ICollection<int>.Add), BindingFlags.Public | BindingFlags.Instance)
+                    ?.Invoke(collectionInstance, [transformedValidCandidate]);
+            }
+            
         }
         else
         {
-            // TODO Set as a non-collection-type
             List<Node> validCandidates = 
                 candidates
                     .Where(c => c.GetNodeType().IsAssignableTo(validCandidateType))
@@ -110,7 +160,7 @@ where TAttribute : InjectAttribute, new()
                 GD.PushWarning($"Multiple candidates for field {injected.Name}.{injectedFieldInfo.Name}");
             }
             Node injection = validCandidates[0];
-            injected.SetField(injection, injectedFieldInfo);
+            injected.SetFieldValue(injection, injectedFieldInfo);
             GD.Print($"Injected {injection.Name} into field {injected.Name}.{injectedFieldInfo.Name}");
         }
         
@@ -136,7 +186,25 @@ where TAttribute : InjectAttribute, new()
         while (index < injectAttributes.Length)
         {
             InjectAttribute injectAttribute = injectAttributes[index];
-            candidates.AddRange(injectAttribute.ProcessAttributes(injected, ref index, injectAttributes));
+            List<Node> newCandidates = injectAttribute.ProcessAttributes(injected, ref index, injectAttributes);
+            newCandidates.ForEach(newCandidate =>
+            {
+                if (!candidates.Contains(newCandidate))
+                {
+                    if (Engine.IsEditorHint() )
+                    {
+                        if (!newCandidate.IsPartOfEditedScene())
+                        {
+                            Node owner = newCandidate.GetOwner();
+                            if (owner == null || !owner.IsPartOfEditedScene())
+                            {
+                                return;   
+                            }
+                        }
+                    }
+                    candidates.Add(newCandidate);
+                }
+            });
             index++;
         }
         
@@ -158,8 +226,42 @@ where TAttribute : InjectAttribute, new()
         
         if (implementsICollection)
         {
-            // TODO Set as a collection
-            GD.Print($"{injectedPropertyInfo.Name} is collection type field of elements of type : {genericType.Name}.");
+            GD.Print($"{injectedPropertyInfo.Name} is collection type property of elements of type : {genericType.Name}.");
+            
+            List<Node> validCandidates = 
+                candidates
+                    .Where(c => c.GetNodeType().IsAssignableTo(genericType))
+                    .ToList();
+            
+            object collectionInstance = injected.GetPropertyValue(injectedPropertyInfo);
+            
+            if (collectionInstance == null)
+            {
+                GD.PrintErr($"Collection property : {injectedPropertyInfo.Name} must be initialized for injection to work.");
+                return;
+            }
+            
+            Type collectionType = collectionInstance.GetType();
+
+            collectionType
+                .GetMethod(nameof(ICollection<int>.Clear))
+                ?.Invoke(collectionInstance, []);
+            
+            foreach (Node validCandidate in validCandidates)
+            {
+                object transformedValidCandidate = null;
+                if (collectionType == typeof(Godot.Collections.Array))
+                {
+                    transformedValidCandidate = Variant.CreateFrom(validCandidate);
+                }
+                else
+                {
+                    transformedValidCandidate = validCandidate;
+                }
+                collectionType
+                    .GetMethod(nameof(ICollection<int>.Add), BindingFlags.Public | BindingFlags.Instance)
+                    ?.Invoke(collectionInstance, [transformedValidCandidate]);
+            }
         }
         else
         {
@@ -180,7 +282,7 @@ where TAttribute : InjectAttribute, new()
                 GD.PushWarning($"Multiple candidates for property {injected.Name}.{injectedPropertyInfo.Name}");
             }
             Node injection = validCandidates[0];
-            injected.SetProperty(injection, injectedPropertyInfo);
+            injected.SetPropertyValue(injection, injectedPropertyInfo);
             GD.Print($"Injected {injection.Name} into property {injected.Name}.{injectedPropertyInfo.Name}");
         }
         
