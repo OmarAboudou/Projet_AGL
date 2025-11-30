@@ -1,6 +1,4 @@
-using Godot.Collections;
-
-namespace Project_AGL.Shared.Server_Discovery;
+namespace Server;
 
 public static class ServerConstants
 {

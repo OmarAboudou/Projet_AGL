@@ -4,9 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
-using Project_AGL.Shared.Server_Discovery;
 
-namespace Project_AGL.Server.Server_Discovery;
+namespace Server;
 
 using static ServerConstants;
 
@@ -21,7 +20,7 @@ public partial class ServerDiscoveryResponder : Node
     {
         try
         {
-            CancellationToken cancellationToken = _cancellationTokenSource.Token;
+            CancellationToken cancellationToken = this._cancellationTokenSource.Token;
             using UdpClient server = new(SERVER_PORT);
             Dictionary responseDictionary = new()
             {

@@ -1,4 +1,7 @@
-*.uid
+.git/
+.godot/
+.idea/
+*.sln.DotSettings.user
 NotShared
 *.csproj
 *.sln

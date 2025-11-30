@@ -1,19 +1,18 @@
 using System;
 using System.Linq;
+using Common.Composition_System.Inject_Attributes;
 using Godot;
-using Project_AGL.Client.Server_Discovery;
-using Project_AGL.Common.Composition_System;
-using Project_AGL.Server.Server_Discovery;
-using Project_AGL.Shared.Lobby;
+using ServerDiscoveryRequester = Server.ServerDiscoveryRequester;
+using ServerDiscoveryResponder = Server.ServerDiscoveryResponder;
 
-namespace Project_AGL.Lobby;
+namespace Lobby;
 
 using static LobbyConstants;
 
 public partial class LobbySelector : Node
 {
-    [Export, Inject] private ServerDiscoveryRequester _serverDiscoveryRequester;
-    [Export, Inject] private ServerDiscoveryResponder _serverDiscoveryResponder;
+    [Export, InjectSibling] private ServerDiscoveryRequester _serverDiscoveryRequester;
+    [Export, InjectSibling] private ServerDiscoveryResponder _serverDiscoveryResponder;
     private ENetMultiplayerPeer _peer = new();
     private bool _alreadySet = false;
 

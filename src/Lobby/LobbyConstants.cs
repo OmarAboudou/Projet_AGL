@@ -1,4 +1,4 @@
-namespace Project_AGL.Shared.Lobby;
+namespace Lobby;
 
 public static class LobbyConstants
 {
