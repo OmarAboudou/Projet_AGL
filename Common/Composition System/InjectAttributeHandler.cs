@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using Common.Composition_System.Inject_Attributes;
@@ -49,10 +50,48 @@ where TAttribute : InjectAttribute, new()
         List<FieldInfo> injectedFieldInfos = this.GetInjectedFields(nodeType);
         foreach (FieldInfo injectedFieldInfo in injectedFieldInfos)
         {
-            InjectAttribute attribute = injectedFieldInfo.GetCustomAttribute<InjectAttribute>();
+            /*InjectAttribute attribute = injectedFieldInfo.GetCustomAttribute<InjectAttribute>();
 
-            if (attribute != null) attribute.Inject(injected, injectedFieldInfo);
+            if (attribute != null) attribute.Inject(injected, injectedFieldInfo);*/
+            
+            this.Inject(injected, injectedFieldInfo);
         }
+    }
+
+    private void Inject(Node injected, FieldInfo injectedFieldInfo)
+    {
+        ImmutableArray<InjectAttribute> injectAttributes = [..injectedFieldInfo.GetCustomAttributes<InjectAttribute>()];
+        if(injectAttributes.Length <= 0) return;
+
+        List<Node> candidates = new();
+        int index = 0;
+        while (index < injectAttributes.Length)
+        {
+            InjectAttribute injectAttribute = injectAttributes[index];
+            candidates.AddRange(injectAttribute.ProcessAttributes(injected, injectedFieldInfo, ref index, injectAttributes));
+            index++;
+        }
+        
+        List<Node> validCandidates = 
+            candidates
+                .Where(c => c.GetNodeType().IsAssignableTo(injectedFieldInfo.FieldType))
+                .ToList();
+
+        if (validCandidates.Count <= 0)
+        {
+            GD.PrintErr($"Couldn't find any candidate for field {injected.Name}.{injectedFieldInfo.Name}");
+            injected.ClearField(injectedFieldInfo);
+            return;
+        }
+        
+        if (validCandidates.Count > 1)
+        {
+            GD.PushWarning($"Multiple candidates for field {injected.Name}.{injectedFieldInfo.Name}");
+        }
+        Node injection = validCandidates[0];
+        injected.SetField(injection, injectedFieldInfo);
+        GD.Print($"Injected {injection.Name} into field {injected.Name}.{injectedFieldInfo.Name}");
+        
     }
 
     private void UpdatePropertiesInjection(Node injected, Type nodeType)
@@ -60,12 +99,49 @@ where TAttribute : InjectAttribute, new()
         List<PropertyInfo> injectedPropertyInfos = this.GetInjectedProperties(nodeType);
         foreach (PropertyInfo injectedPropertyInfo in injectedPropertyInfos)
         {
-            InjectAttribute attribute = injectedPropertyInfo.GetCustomAttribute<InjectAttribute>();
+            /*InjectAttribute attribute = injectedPropertyInfo.GetCustomAttribute<InjectAttribute>();
 
-            if (attribute != null) attribute.Inject(injected, injectedPropertyInfo);
+            if (attribute != null) attribute.Inject(injected, injectedPropertyInfo);*/
+            
+            this.Inject(injected, injectedPropertyInfo);
         }
     }
-    
+
+    private void Inject(Node injected, PropertyInfo injectedPropertyInfo)
+    {
+        ImmutableArray<InjectAttribute> injectAttributes = [..injectedPropertyInfo.GetCustomAttributes<InjectAttribute>()];
+        if(injectAttributes.Length <= 0) return;
+
+        List<Node> candidates = new();
+        int index = 0;
+        while (index < injectAttributes.Length)
+        {
+            InjectAttribute injectAttribute = injectAttributes[index];
+            candidates.AddRange(injectAttribute.ProcessAttributes(injected, injectedPropertyInfo, ref index, injectAttributes));
+            index++;
+        }
+        
+        List<Node> validCandidates = 
+            candidates
+                .Where(c => c.GetNodeType().IsAssignableTo(injectedPropertyInfo.PropertyType))
+                .ToList();
+
+        if (validCandidates.Count <= 0)
+        {
+            GD.PrintErr($"Couldn't find any candidate for property {injected.Name}.{injectedPropertyInfo.Name}");
+            injected.ClearProperty(injectedPropertyInfo);
+            return;
+        }
+        
+        if (validCandidates.Count > 1)
+        {
+            GD.PushWarning($"Multiple candidates for property {injected.Name}.{injectedPropertyInfo.Name}");
+        }
+        Node injection = validCandidates[0];
+        injected.SetProperty(injection, injectedPropertyInfo);
+        GD.Print($"Injected {injection.Name} into property {injected.Name}.{injectedPropertyInfo.Name}");
+    }
+
     private void OnNodeAdded(Node node)
     {
         if (Engine.IsEditorHint())
