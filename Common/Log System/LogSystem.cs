@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
+using Common.Logging_System;
 using Godot;
 
-namespace Common.Logging_System;
+namespace Common.Log_System;
 
-public static class LoggingSystem
+public static class LogSystem
 {
     private static readonly Dictionary<LogType, HashSet<object>> LogEnabledObjectDictionary = new();
     private static readonly Dictionary<LogType, HashSet<Type>> LogEnabledTypeDictionary = new();
     private delegate void PrintingFunctionDelegate(params object[] messages);
 
-    static LoggingSystem()
+    static LogSystem()
     {
         foreach (LogType value in Enum.GetValues<LogType>())
         {
