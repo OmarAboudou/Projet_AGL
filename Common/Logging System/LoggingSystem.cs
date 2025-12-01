@@ -8,8 +8,7 @@ namespace Common.Logging_System;
 
 public static class LoggingSystem
 {
-    private static Dictionary<Type, string> SeparatorsPerType = [];
-    private static string DefaultSeparator = " ";
+    public static readonly string DefaultSeparator = "\n";
 
     static LoggingSystem()
     {
@@ -31,18 +30,8 @@ public static class LoggingSystem
         
         foreach (Type type in loggableTypes)
         {
-            SeparatorsPerType.Add(type, DefaultSeparator);
+
         }
-    }
-
-    public static void SetSeparator<T>(this ILoggable<T> loggable, string separator) where T : ILoggable<T>
-    {
-        SeparatorsPerType.Add(typeof(T), separator);
-    }
-
-    public static string GetSeparator<T>(this ILoggable<T> loggable) where T : ILoggable<T>
-    {
-        return SeparatorsPerType.GetValueOrDefault(typeof(T), DefaultSeparator);
     }
     
     public static void LogInfo<T>(this ILoggable<T> loggable, params object[] messages) where T : ILoggable<T>
@@ -77,7 +66,7 @@ public static class LoggingSystem
 
     private static string CreateMessage<T>(string prefix, ILoggable<T> loggable, params object[] messages) where T : ILoggable<T>
     {
-        return $"[{prefix}] [{typeof(T).Name}:{loggable}] {String.Join(SeparatorsPerType[typeof(T)], messages)}";
+        return $"[{prefix}] [{typeof(T).Name}:{loggable}] {String.Join(T.Separator, messages)}";
     }
 
     private static bool IsLogEnabled<T>(this ILoggable<T> loggable, String propertyName) where T : ILoggable<T>

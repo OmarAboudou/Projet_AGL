@@ -58,4 +58,17 @@ public static bool IsLogXXXEnabled => true
 public static bool IsLogXXXEnabled {get; private set;} = true
 ```
 
+## Separator Customization
+
+To customize the separator for a certain loggable type,
+the Separator property can be overriden.
+
+```csharp
+// Uses a space between each logged object
+public static string Separator => " ";
+
+// Uses a tabulation between each logged object
+public static string Separator => "\t";
+```
+
 
