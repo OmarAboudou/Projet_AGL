@@ -1,4 +1,4 @@
-namespace Common.Logging_System;
+namespace Common.Log_System;
 
 public enum LogType
 {
