@@ -11,10 +11,19 @@ using Godot;
 namespace Common.Composition_System;
 
 [Tool]
-public sealed partial class InjectAttributeHandler : Node, ILoggable<InjectAttributeHandler>
+public sealed partial class InjectAttributeHandler : Node
 {
     private readonly List<Node> _handledNodes = new();
     private bool _injectAllQueued;
+
+    public override void _Ready()
+    {
+        base._Ready();
+        // this.SetLogEnabled(LogType.INFO, true);
+        this.SetLogEnabled(LogType.WARNING, true);
+        this.SetLogEnabled(LogType.ERROR, true);
+        this.SetLogEnabled(LogType.CRITICAL, true);
+    }
 
     public override void _EnterTree()
     {
@@ -182,14 +191,14 @@ public sealed partial class InjectAttributeHandler : Node, ILoggable<InjectAttri
         Type elementType,
         List<Node> validCandidates)
     {
-        this.LogInfo($"{injectedMemberInfo.Name} is collection type {injectedMemberInfo.MemberType} " +
-                 $"of elements of type : {elementType.Name}.");
+        this.Log(LogType.INFO, $"{injectedMemberInfo.Name} is collection type {injectedMemberInfo.MemberType} " +
+                                             $"of elements of type : {elementType.Name}.");
         
         object collectionInstance = GetMemberValue(injected, injectedMemberInfo);
 
         if (collectionInstance == null)
         {
-            this.LogError($"Collection {injectedMemberInfo.MemberType} : {injectedMemberInfo.Name} must be initialized for injection to work.");
+            this.Log(LogType.ERROR,$"Collection {injectedMemberInfo.MemberType} : {injectedMemberInfo.Name} must be initialized for injection to work.");
             return;
         }
 
@@ -229,20 +238,20 @@ public sealed partial class InjectAttributeHandler : Node, ILoggable<InjectAttri
 
         if (validCandidates.Count == 0)
         {
-            this.LogError($"Couldn't find any candidate for {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
+            this.Log(LogType.ERROR,$"Couldn't find any candidate for {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
             ClearMemberValue(injected, injectedMemberInfo);
             return;
         }
 
         if (validCandidates.Count > 1)
         {
-            this.LogWarning($"Multiple candidates for {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
+            this.Log(LogType.WARNING,$"Multiple candidates for {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
         }
 
         Node injection = validCandidates[0];
         SetMemberValue(injected, injection, injectedMemberInfo);
         
-        this.LogInfo($"Injected {injection.Name} into {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
+        this.Log(LogType.INFO,$"Injected {injection.Name} into {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
     }
 
 

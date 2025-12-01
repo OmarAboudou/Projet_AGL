@@ -7,18 +7,20 @@
 
 [node name="CloseParent" type="Node" parent="."]
 
-[node name="Self" type="Node3D" parent="CloseParent" node_paths=PackedStringArray("_childField", "_siblingField", "_parentField", "_ancestorField", "_parentSiblingField", "ChildProperty", "SiblingProperty", "ParentProperty", "AncestorProperty", "ParentSiblingProperty")]
+[node name="Self" type="Node3D" parent="CloseParent" node_paths=PackedStringArray("_childField", "_siblingField", "_parentField", "_ancestorField", "_parentSiblingField", "_injectTestChildField", "ChildProperty", "SiblingProperty", "ParentProperty", "AncestorProperty", "ParentSiblingProperty", "InjectTestChildProperty")]
 script = ExtResource("1_b750v")
 _childField = NodePath("Child")
 _siblingField = NodePath("../Sibling")
 _parentField = NodePath("..")
 _ancestorField = NodePath("../..")
 _parentSiblingField = NodePath("../../ParentSibling")
+_injectTestChildField = NodePath("Node")
 ChildProperty = NodePath("Child")
 SiblingProperty = NodePath("../Sibling")
 ParentProperty = NodePath("..")
 AncestorProperty = NodePath("../..")
 ParentSiblingProperty = NodePath("../../ParentSibling")
+InjectTestChildProperty = NodePath("Node")
 
 [node name="Child" type="CSGBox3D" parent="CloseParent/Self"]
 

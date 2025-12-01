@@ -1,102 +1,81 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Godot;
 
 namespace Common.Logging_System;
 
 public static class LoggingSystem
 {
-    public static readonly string DefaultSeparator = "\n";
+    private static readonly Dictionary<LogType, HashSet<object>> LogEnabledObjectDictionary = new();
+    private static readonly Dictionary<LogType, HashSet<Type>> LogEnabledTypeDictionary = new();
+    private delegate void PrintingFunctionDelegate(params object[] messages);
 
     static LoggingSystem()
     {
-        IEnumerable<Type> loggableTypes = 
-            typeof(ILoggable<>)
-                .Assembly
-                .GetTypes()
-                .Where(t =>
-                {
-                    foreach (Type i in t.GetInterfaces())
-                    {
-                        if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ILoggable<>))
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-        
-        foreach (Type type in loggableTypes)
+        foreach (LogType value in Enum.GetValues<LogType>())
         {
-
+            LogEnabledTypeDictionary[value] = [];
+            LogEnabledObjectDictionary[value] = [];
         }
     }
     
-    public static void LogInfo<T>(this ILoggable<T> loggable, params object[] messages) where T : ILoggable<T>
+    public static void SetLogEnabled(this object source, LogType logType, bool enabled)
     {
-        if(!loggable.IsLogInfoEnabled()) return;
+        if(enabled) LogEnabledObjectDictionary[logType].Add(source);
+        else LogEnabledObjectDictionary[logType].Remove(source);
+    }
+
+    public static void SetLogEnabled<T>(LogType logType, bool enabled) where T : class
+    {
+        if(enabled) LogEnabledObjectDictionary[logType].Add(typeof(T));
+        else LogEnabledObjectDictionary[logType].Remove(typeof(T));
+    }
+
+    public static void Log(this object source, LogType logType, params object[] messages)
+    {
+        if(!source.IsLogEnabled(logType)) return;
         
-        GD.Print(CreateMessage("INFO", loggable, messages));
+        PrintingFunctionDelegate printingFunctionDelegate = GetLogFunction(logType);
+        printingFunctionDelegate?.Invoke(messages: [$"[{Enum.GetName(logType)}]", $"[{source.GetType()}:{source}]", ..messages]);
     }
 
-    public static void LogWarning<T>(this ILoggable<T> loggable, params object[] messages) where T : ILoggable<T>
+    public static void Log<T>(LogType logType, params object[] messages) where T : class
     {
-        if(!loggable.IsLogWarningEnabled()) return;
-
-        GD.PushWarning(CreateMessage("WARNING", loggable, messages));
+        if(!IsLogEnabled<T>(logType)) return;
         
-    }
-
-    public static void LogError<T>(this ILoggable<T> loggable, params object[] messages) where T : ILoggable<T>
-    {
-        if(!loggable.IsLogErrorEnabled()) return;
         
-        GD.PrintErr(CreateMessage("ERROR", loggable, messages));
+        PrintingFunctionDelegate printingFunctionDelegate = GetLogFunction(logType);
+        printingFunctionDelegate?.Invoke(messages: [$"[{Enum.GetName(logType)}]", $"[{nameof(T)}]", ..messages]);
     }
 
-    public static void LogCritical<T>(this ILoggable<T> loggable, params object[] messages) where T : ILoggable<T>
+    private static PrintingFunctionDelegate GetLogFunction(LogType logType)
     {
-        if(!loggable.IsLogCriticalEnabled()) return;
-        
-        GD.PushError(CreateMessage("CRITICAL", loggable, messages));
-
+        return logType switch
+        {
+            LogType.INFO => GD.Print,
+            LogType.WARNING => GD.PushWarning,
+            LogType.ERROR => GD.PrintErr,
+            LogType.CRITICAL => GD.PushError,
+            _ => messages =>
+            {
+                GD.PushWarning($"Log type : {logType} is not yet handled. By default {nameof(GD.Print)} is used for printing.");
+                GD.Print(messages);
+            }
+        };
     }
-
-    private static string CreateMessage<T>(string prefix, ILoggable<T> loggable, params object[] messages) where T : ILoggable<T>
+    
+    private static bool IsLogEnabled(this object source, LogType logType)
     {
-        return $"[{prefix}] [{typeof(T).Name}:{loggable}] {String.Join(T.Separator, messages)}";
+        return LogEnabledObjectDictionary[logType].Contains(source) || LogEnabledTypeDictionary[logType].Contains(source.GetType());
     }
 
-    private static bool IsLogEnabled<T>(this ILoggable<T> loggable, String propertyName) where T : ILoggable<T>
+    private static bool IsLogEnabled<T>(LogType logType) where T : class
     {
-        return 
-            (bool)
-            typeof(T)
-                .GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public)
-                .GetValue(null);
-        
+        return LogEnabledTypeDictionary[logType].Contains(typeof(T));
     }
-
-    private static bool IsLogInfoEnabled<T>(this ILoggable<T> loggable) where T : ILoggable<T>
-    {
-        return IsLogEnabled(loggable, nameof(ILoggable<T>.IsLogInfoEnabled));
-    }
-
-    public static bool IsLogWarningEnabled<T>(this ILoggable<T> loggable) where T : ILoggable<T>
-    {
-        return IsLogEnabled(loggable, nameof(ILoggable<T>.IsLogWarningEnabled));
-    }
-
-    public static bool IsLogErrorEnabled<T>(this ILoggable<T> loggable) where T : ILoggable<T>
-    {
-        return IsLogEnabled(loggable, nameof(ILoggable<T>.IsLogErrorEnabled));
-    }
-
-    public static bool IsLogCriticalEnabled<T>(this ILoggable<T> loggable) where T : ILoggable<T>
-    {
-        return IsLogEnabled(loggable, nameof(ILoggable<T>.IsLogCriticalEnabled));
-    }
+    
+    
+    
+    
     
 }
