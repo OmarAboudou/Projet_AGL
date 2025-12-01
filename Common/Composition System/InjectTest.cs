@@ -4,7 +4,7 @@ using Godot.Collections;
 
 namespace Common.Composition_System;
 
-public partial class InjectTest : Node
+public sealed partial class InjectTest : Node
 {
     [ExportGroup("Fields")]
     [Export, InjectChild] private CsgBox3D _childField;
@@ -13,6 +13,7 @@ public partial class InjectTest : Node
     [Export, InjectAncestor] private Node2D _ancestorField;
     [Export, InjectParentSibling] private CanvasModulate _parentSiblingField;
     [Export, InjectChild, InjectAncestor, InjectParentSibling] private Array<CanvasItem> _childrenAndParentsField = new();
+    [Export, InjectChild] private InjectableNode _injectTestChildField;
 
     [ExportGroup("Properties")]
     [Export, InjectChild] private CsgBox3D ChildProperty { get; set; }
@@ -21,5 +22,7 @@ public partial class InjectTest : Node
     [Export, InjectAncestor] private Node2D AncestorProperty { get; set; }
     [Export, InjectParentSibling] private CanvasModulate ParentSiblingProperty { get; set; }
     [Export, InjectChild, InjectAncestor, InjectParentSibling] private Array<CanvasItem> ChildrenAndParentsProperty { get; set; } = new();
+    [Export, InjectChild] private InjectableNode InjectTestChildProperty { get; set; }
+    
 
 }

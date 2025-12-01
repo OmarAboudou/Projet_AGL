@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://gdr62if74xo1"]
+[gd_scene load_steps=3 format=3 uid="uid://gdr62if74xo1"]
 
 [ext_resource type="Script" uid="uid://ch8acq5gwbcpf" path="res://Common/Composition System/InjectTest.cs" id="1_b750v"]
+[ext_resource type="Script" uid="uid://hbqmvfn00w1j" path="res://Common/Composition System/InjectableNode.cs" id="2_77h0y"]
 
 [node name="FarParent" type="Node2D"]
 
@@ -21,7 +22,8 @@ ParentSiblingProperty = NodePath("../../ParentSibling")
 
 [node name="Child" type="CSGBox3D" parent="CloseParent/Self"]
 
-[node name="Child2" type="CSGBox3D" parent="CloseParent/Self"]
+[node name="Node" type="Node" parent="CloseParent/Self"]
+script = ExtResource("2_77h0y")
 
 [node name="Sibling" type="Control" parent="CloseParent"]
 layout_mode = 3

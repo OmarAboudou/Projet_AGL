@@ -11,7 +11,7 @@ using Godot;
 namespace Common.Composition_System;
 
 [Tool]
-public partial class InjectAttributeHandler : Node, ILoggable<InjectAttributeHandler>
+public sealed partial class InjectAttributeHandler : Node, ILoggable<InjectAttributeHandler>
 {
     private readonly List<Node> _handledNodes = new();
     private bool _injectAllQueued;
@@ -23,7 +23,14 @@ public partial class InjectAttributeHandler : Node, ILoggable<InjectAttributeHan
         this.GetTree().NodeRemoved += this.OnNodeRemoved;
         if (!Engine.IsEditorHint())
         {
-            this.GetTree().TreeChanged += this.ScheduleInjectAll;
+            this.GetTree().Root.Ready += RootOnReady;
+
+            void RootOnReady()
+            {
+                this.GetTree().Root.Ready -= RootOnReady;
+                this.GetTree().TreeChanged += this.ScheduleInjectAll;
+            }
+
         }
     }
     
@@ -255,7 +262,8 @@ public partial class InjectAttributeHandler : Node, ILoggable<InjectAttributeHan
         {
             if (node.IsPartOfEditedScene())
             {
-                node.ChildOrderChanged += this.InjectAll;
+                node.ChildOrderChanged += this.ScheduleInjectAll;
+                node.ScriptChanged += this.ScheduleInjectAll;
             }
         }
         
@@ -271,7 +279,8 @@ public partial class InjectAttributeHandler : Node, ILoggable<InjectAttributeHan
         {
             if (node.IsPartOfEditedScene())
             {
-                node.ChildOrderChanged -= this.InjectAll;
+                node.ChildOrderChanged -= this.ScheduleInjectAll;
+                node.ScriptChanged -= this.ScheduleInjectAll;
             }
         }
         
