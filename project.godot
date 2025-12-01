@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.5", "C#", "Mobile")
 
 [autoload]
 
-ComponentSystem="*res://Common/Composition System/ComponentSystem.cs"
+InjectAttributeHandler="*res://Common/Composition System/InjectAttributeHandler.cs"
 
 [dotnet]
 
