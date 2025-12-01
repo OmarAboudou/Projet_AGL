@@ -408,12 +408,4 @@ public sealed partial class InjectAttributeHandler : Node
             node.Set(memberInfo.Name, default);
         }
     }
-
-    public static bool IsLogInfoEnabled => false;
-
-    public static bool IsLogWarningEnabled => true;
-
-    public static bool IsLogErrorEnabled => true;
-
-    public static bool IsLogCriticalEnabled => true;
 }
