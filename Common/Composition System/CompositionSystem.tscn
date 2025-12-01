@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bag873io4pxyi"]
-
-[ext_resource type="Script" uid="uid://3inyh28erjsa" path="res://Composition System/CompositionSystem.cs" id="1_4fl5b"]
-
-[node name="CompositionSystem" type="Node"]
-script = ExtResource("1_4fl5b")

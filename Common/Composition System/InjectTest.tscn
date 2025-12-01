@@ -21,6 +21,8 @@ ParentSiblingProperty = NodePath("../../ParentSibling")
 
 [node name="Child" type="CSGBox3D" parent="CloseParent/Self"]
 
+[node name="Child2" type="CSGBox3D" parent="CloseParent/Self"]
+
 [node name="Sibling" type="Control" parent="CloseParent"]
 layout_mode = 3
 anchors_preset = 0

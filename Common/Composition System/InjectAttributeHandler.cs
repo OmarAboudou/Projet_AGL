@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using Common.Composition_System.Inject_Attributes;
 using Common.Utils;
+using Common.Composition_System.Inject_Attributes;
+using Common.Logging_System;
 using Godot;
 
 namespace Common.Composition_System;
 
 [Tool]
-public partial class InjectAttributeHandler<TAttribute> : Node
-where TAttribute : InjectAttribute, new()
+public partial class InjectAttributeHandler : Node, ILoggable<InjectAttributeHandler>
 {
     private readonly List<Node> _handledNodes = new();
-    
+    private bool _injectAllQueued;
+
     public override void _EnterTree()
     {
         base._EnterTree();
@@ -22,10 +23,10 @@ where TAttribute : InjectAttribute, new()
         this.GetTree().NodeRemoved += this.OnNodeRemoved;
         if (!Engine.IsEditorHint())
         {
-            this.GetTree().TreeChanged += this.InjectAll;
+            this.GetTree().TreeChanged += this.ScheduleInjectAll;
         }
     }
-
+    
     public override void _ExitTree()
     {
         base._ExitTree();
@@ -33,261 +34,221 @@ where TAttribute : InjectAttribute, new()
         this.GetTree().NodeRemoved -= this.OnNodeRemoved;
         if (!Engine.IsEditorHint())
         {
-            this.GetTree().TreeChanged -= this.InjectAll;
+            this.GetTree().TreeChanged -= this.ScheduleInjectAll;
         }
     }
+    
+    private void ScheduleInjectAll()
+    {
+        if (_injectAllQueued)
+            return;
+
+        _injectAllQueued = true;
+        CallDeferred(nameof(DeferredInjectAll));
+    }
+
+    private void DeferredInjectAll()
+    {
+        _injectAllQueued = false;
+        InjectAll();
+    }
+
     
     private void UpdateInjection(Node injected)
     {
-        Type nodeType = injected.GetNodeType();
+        Type nodeType = this.GetNodeType(injected);
 
-        this.UpdateFieldsInjection(injected, nodeType);
-        this.UpdatePropertiesInjection(injected, nodeType);
+        List<MemberInfo> injectedMemberInfos = this.GetInjectedMembers(nodeType);
+        foreach (MemberInfo injectedMemberInfo in injectedMemberInfos)
+        {
+            this.Inject(injected, injectedMemberInfo);
+        }
+        
     }
     
-    private void UpdateFieldsInjection(Node injected, Type nodeType)
+    private void Inject(Node injected, MemberInfo injectedMemberInfo)
     {
-        List<FieldInfo> injectedFieldInfos = this.GetInjectedFields(nodeType);
-        foreach (FieldInfo injectedFieldInfo in injectedFieldInfos)
+        ImmutableArray<InjectAttribute> injectAttributes = GetInjectAttributes(injectedMemberInfo);
+        if (injectAttributes.Length == 0)
+            return;
+
+        List<Node> candidates = BuildCandidates(injected, injectAttributes);
+
+        Type memberType = GetMemberType(injectedMemberInfo);
+
+        bool isCollection = TryGetCollectionElementType(memberType, out Type elementType);
+        List<Node> validCandidates = candidates
+            .Where(c => GetNodeType(c).IsAssignableTo(isCollection ? elementType : memberType))
+            .ToList();
+            
+        if (isCollection)
         {
-            this.Inject(injected, injectedFieldInfo);
-        }
-    }
-
-    private void Inject(Node injected, FieldInfo injectedFieldInfo)
-    {
-        ImmutableArray<InjectAttribute> injectAttributes = [..injectedFieldInfo.GetCustomAttributes<InjectAttribute>()];
-        if(injectAttributes.Length <= 0) return;
-
-        List<Node> candidates = new();
-        int index = 0;
-        while (index < injectAttributes.Length)
-        {
-            InjectAttribute injectAttribute = injectAttributes[index];
-            List<Node> newCandidates = injectAttribute.ProcessAttributes(injected, ref index, injectAttributes);
-            newCandidates.ForEach(newCandidate =>
-            {
-                if (!candidates.Contains(newCandidate))
-                {
-                    if (Engine.IsEditorHint() )
-                    {
-                        if (!newCandidate.IsPartOfEditedScene())
-                        {
-                            Node owner = newCandidate.GetOwner();
-                            if (owner == null || !owner.IsPartOfEditedScene())
-                            {
-                                return;   
-                            }
-                        }
-                    }
-                    candidates.Add(newCandidate);
-                }
-            });
-            index++;
-        }
-        
-        Type validCandidateType = injectedFieldInfo.FieldType;
-        
-        Type[] interfaces = validCandidateType.GetInterfaces();
-        Type genericType = null;
-
-        foreach (Type i in interfaces)
-        {
-            if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>))
-            {
-                genericType = i.GetGenericArguments()[0];
-                break;
-            }
-        }
-
-        bool implementsICollection = genericType != null;
-        
-        if (implementsICollection)
-        {
-            GD.Print($"{injectedFieldInfo.Name} is collection type field of elements of type : {genericType.Name}.");
-            List<Node> validCandidates = 
-                candidates
-                    .Where(c => c.GetNodeType().IsAssignableTo(genericType))
-                    .ToList();
-            
-            object collectionInstance = injected.GetFieldValue(injectedFieldInfo);
-            
-            if (collectionInstance == null)
-            {
-                GD.PrintErr($"Collection field : {injectedFieldInfo.Name} must be initialized for injection to work.");
-                return;  
-            }
-            
-            Type collectionType = collectionInstance.GetType();
-
-            collectionType
-                .GetMethod(nameof(ICollection<int>.Clear))
-                ?.Invoke(collectionInstance, []);
-            
-            foreach (Node validCandidate in validCandidates)
-            {
-                object transformedValidCandidate = null;
-                if (collectionType == typeof(Godot.Collections.Array))
-                {
-                    transformedValidCandidate = Variant.CreateFrom(validCandidate);
-                }
-                else
-                {
-                    transformedValidCandidate = validCandidate;
-                }
-                collectionType
-                    .GetMethod(nameof(ICollection<int>.Add), BindingFlags.Public | BindingFlags.Instance)
-                    ?.Invoke(collectionInstance, [transformedValidCandidate]);
-            }
-            
+            InjectCollection(injected, injectedMemberInfo, elementType, validCandidates);
         }
         else
         {
-            List<Node> validCandidates = 
-                candidates
-                    .Where(c => c.GetNodeType().IsAssignableTo(validCandidateType))
-                    .ToList();
-
-            if (validCandidates.Count <= 0)
-            {
-                GD.PrintErr($"Couldn't find any candidate for field {injected.Name}.{injectedFieldInfo.Name}");
-                injected.ClearField(injectedFieldInfo);
-                return;
-            }
-        
-            if (validCandidates.Count > 1)
-            {
-                GD.PushWarning($"Multiple candidates for field {injected.Name}.{injectedFieldInfo.Name}");
-            }
-            Node injection = validCandidates[0];
-            injected.SetFieldValue(injection, injectedFieldInfo);
-            GD.Print($"Injected {injection.Name} into field {injected.Name}.{injectedFieldInfo.Name}");
-        }
-        
-    }
-
-    private void UpdatePropertiesInjection(Node injected, Type nodeType)
-    {
-        List<PropertyInfo> injectedPropertyInfos = this.GetInjectedProperties(nodeType);
-        foreach (PropertyInfo injectedPropertyInfo in injectedPropertyInfos)
-        {
-            
-            this.Inject(injected, injectedPropertyInfo);
+            InjectSingle(injected, injectedMemberInfo, memberType, validCandidates);
         }
     }
 
-    private void Inject(Node injected, PropertyInfo injectedPropertyInfo)
+    private static ImmutableArray<InjectAttribute> GetInjectAttributes(MemberInfo member)
     {
-        ImmutableArray<InjectAttribute> injectAttributes = [..injectedPropertyInfo.GetCustomAttributes<InjectAttribute>()];
-        if(injectAttributes.Length <= 0) return;
+        return [..member.GetCustomAttributes<InjectAttribute>()];
+    }
 
-        List<Node> candidates = new();
+    private List<Node> BuildCandidates(Node injected, ImmutableArray<InjectAttribute> injectAttributes)
+    {
+        List<Node> candidates = new List<Node>();
+        if (injectAttributes.Length == 0)
+            return candidates;
+
         int index = 0;
+
         while (index < injectAttributes.Length)
         {
             InjectAttribute injectAttribute = injectAttributes[index];
-            List<Node> newCandidates = injectAttribute.ProcessAttributes(injected, ref index, injectAttributes);
-            newCandidates.ForEach(newCandidate =>
+            List<Node> newCandidates   = injectAttribute.ProcessAttributes(injected, ref index, injectAttributes);
+
+            foreach (Node newCandidate in newCandidates)
             {
-                if (!candidates.Contains(newCandidate))
-                {
-                    if (Engine.IsEditorHint() )
-                    {
-                        if (!newCandidate.IsPartOfEditedScene())
-                        {
-                            Node owner = newCandidate.GetOwner();
-                            if (owner == null || !owner.IsPartOfEditedScene())
-                            {
-                                return;   
-                            }
-                        }
-                    }
-                    candidates.Add(newCandidate);
-                }
-            });
+                if (newCandidate == null)
+                    continue;
+
+                if (candidates.Contains(newCandidate))
+                    continue;
+
+                if (!IsCandidateAllowedInEditor(newCandidate))
+                    continue;
+
+                candidates.Add(newCandidate);
+            }
+
             index++;
         }
-        
-        Type validCandidateType = injectedPropertyInfo.PropertyType;
-        
-        Type[] interfaces = validCandidateType .GetInterfaces();
-        Type genericType = null;
 
-        foreach (Type i in interfaces)
-        {
-            if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>))
-            {
-                genericType = i.GetGenericArguments()[0];
-                break;
-            }
-        }
-
-        bool implementsICollection = genericType != null;
-        
-        if (implementsICollection)
-        {
-            GD.Print($"{injectedPropertyInfo.Name} is collection type property of elements of type : {genericType.Name}.");
-            
-            List<Node> validCandidates = 
-                candidates
-                    .Where(c => c.GetNodeType().IsAssignableTo(genericType))
-                    .ToList();
-            
-            object collectionInstance = injected.GetPropertyValue(injectedPropertyInfo);
-            
-            if (collectionInstance == null)
-            {
-                GD.PrintErr($"Collection property : {injectedPropertyInfo.Name} must be initialized for injection to work.");
-                return;
-            }
-            
-            Type collectionType = collectionInstance.GetType();
-
-            collectionType
-                .GetMethod(nameof(ICollection<int>.Clear))
-                ?.Invoke(collectionInstance, []);
-            
-            foreach (Node validCandidate in validCandidates)
-            {
-                object transformedValidCandidate = null;
-                if (collectionType == typeof(Godot.Collections.Array))
-                {
-                    transformedValidCandidate = Variant.CreateFrom(validCandidate);
-                }
-                else
-                {
-                    transformedValidCandidate = validCandidate;
-                }
-                collectionType
-                    .GetMethod(nameof(ICollection<int>.Add), BindingFlags.Public | BindingFlags.Instance)
-                    ?.Invoke(collectionInstance, [transformedValidCandidate]);
-            }
-        }
-        else
-        {
-            List<Node> validCandidates = 
-                candidates
-                    .Where(c => c.GetNodeType().IsAssignableTo(validCandidateType))
-                    .ToList();
-
-            if (validCandidates.Count <= 0)
-            {
-                GD.PrintErr($"Couldn't find any candidate for property {injected.Name}.{injectedPropertyInfo.Name}");
-                injected.ClearProperty(injectedPropertyInfo);
-                return;
-            }
-        
-            if (validCandidates.Count > 1)
-            {
-                GD.PushWarning($"Multiple candidates for property {injected.Name}.{injectedPropertyInfo.Name}");
-            }
-            Node injection = validCandidates[0];
-            injected.SetPropertyValue(injection, injectedPropertyInfo);
-            GD.Print($"Injected {injection.Name} into property {injected.Name}.{injectedPropertyInfo.Name}");
-        }
-        
+        return candidates;
     }
 
+    private static bool IsCandidateAllowedInEditor(Node newCandidate)
+    {
+        if (!Engine.IsEditorHint())
+            return true;
+
+        if (newCandidate.IsPartOfEditedScene())
+            return true;
+
+        Node owner = newCandidate.GetOwner();
+        return owner != null && owner.IsPartOfEditedScene();
+    }
+
+    private static bool TryGetCollectionElementType(Type memberType, out Type elementType)
+    {
+        elementType = null;
+
+        // Le membre est directement ICollection<T>
+        if (memberType.IsGenericType &&
+            memberType.GetGenericTypeDefinition() == typeof(ICollection<>))
+        {
+            elementType = memberType.GetGenericArguments()[0];
+            return true;
+        }
+
+        // Le membre implémente ICollection<T> (List<T>, HashSet<T>, etc.)
+        Type iCollectionInterface = memberType
+            .GetInterfaces()
+            .FirstOrDefault(i =>
+                i.IsGenericType &&
+                i.GetGenericTypeDefinition() == typeof(ICollection<>));
+
+        if (iCollectionInterface != null)
+        {
+            elementType = iCollectionInterface.GetGenericArguments()[0];
+            return true;
+        }
+
+        return false;
+    }
+
+    private void InjectCollection(
+        Node injected,
+        MemberInfo injectedMemberInfo,
+        Type elementType,
+        List<Node> validCandidates)
+    {
+        this.LogInfo($"{injectedMemberInfo.Name} is collection type {injectedMemberInfo.MemberType} " +
+                 $"of elements of type : {elementType.Name}.");
+        
+        object collectionInstance = GetMemberValue(injected, injectedMemberInfo);
+
+        if (collectionInstance == null)
+        {
+            this.LogError($"Collection {injectedMemberInfo.MemberType} : {injectedMemberInfo.Name} must be initialized for injection to work.");
+            return;
+        }
+
+        Type collectionType = collectionInstance.GetType();
+        
+        collectionType
+            .GetMethod(nameof(ICollection<int>.Clear))
+            ?.Invoke(collectionInstance, []);
+        
+        MethodInfo addMethod = collectionType
+            .GetMethod(nameof(ICollection<int>.Add), BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (Node validCandidate in validCandidates)
+        {
+            object transformedValidCandidate;
+
+            if (collectionType == typeof(Godot.Collections.Array))
+            {
+                transformedValidCandidate = Variant.CreateFrom(validCandidate);
+            }
+            else
+            {
+                transformedValidCandidate = validCandidate;
+            }
+
+            addMethod?.Invoke(collectionInstance, [transformedValidCandidate]);
+        }
+    }
+
+    private void InjectSingle(
+        Node injected,
+        MemberInfo injectedMemberInfo,
+        Type validCandidateType,
+        List<Node> validCandidates)
+    {
+        MemberTypes memberKind = injectedMemberInfo.MemberType; // Field / Property
+
+        if (validCandidates.Count == 0)
+        {
+            this.LogError($"Couldn't find any candidate for {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
+            ClearMemberValue(injected, injectedMemberInfo);
+            return;
+        }
+
+        if (validCandidates.Count > 1)
+        {
+            this.LogWarning($"Multiple candidates for {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
+        }
+
+        Node injection = validCandidates[0];
+        SetMemberValue(injected, injection, injectedMemberInfo);
+        
+        this.LogInfo($"Injected {injection.Name} into {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
+    }
+
+
+    private Type GetMemberType(MemberInfo memberInfo)
+    {
+        return memberInfo switch
+        {
+            FieldInfo fieldInfo => fieldInfo.FieldType,
+            PropertyInfo propertyInfo => propertyInfo.PropertyType,
+            _ => throw new InvalidOperationException($"MemberInfo must be of type FieldInfo or PropertyInfo.")
+        };
+    }
+    
     private void OnNodeAdded(Node node)
     {
         if (Engine.IsEditorHint())
@@ -330,45 +291,110 @@ where TAttribute : InjectAttribute, new()
     
     private bool IsHandled(Node node)
     {
-        Type nodeType = node.GetNodeType();
+        Type nodeType = this.GetNodeType(node);
 
-        return this.HasAnyInjectedFields(nodeType) || this.HasAnyInjectedProperties(nodeType);
+        return this.HasAnyInjectedMembers(nodeType);
     }
 
-    private List<FieldInfo> GetInjectedFields(Type type)
+    private List<MemberInfo> GetInjectedMembers(Type type)
     {
-        return type
-            .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+        List<MemberInfo> members = 
+            type
+            .GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
             .Where
             (
                 info => info
-                    .GetCustomAttributes<TAttribute>()
+                    .GetCustomAttributes<InjectAttribute>()
                     .Any()
-            )
-            .ToList();
+            ).ToList();
+        return members;
     }
 
-    private List<PropertyInfo> GetInjectedProperties(Type type)
+    private bool HasAnyInjectedMembers(Type type)
     {
-        return type
-            .GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-            .Where
-            (
-                info => info
-                .GetCustomAttributes<TAttribute>()
-                .Any()
-            )
-            .ToList();
+        return this.GetInjectedMembers(type).Any();
     }
     
-    private bool HasAnyInjectedFields(Type type)
+    private Type GetNodeType(Node node)
     {
-        return this.GetInjectedFields(type).Any();
+        Type nodeType = node.GetType();
+        if (!Engine.IsEditorHint()) return nodeType;
+        
+        Type scriptType = (node.GetScript().Obj as Script)?.GetScriptType();
+        if(scriptType != null) return scriptType;
+        
+        return nodeType;
     }
 
-    private bool HasAnyInjectedProperties(Type type)
+    private object GetMemberValue(Node node, MemberInfo memberInfo)
     {
-        return this.GetInjectedProperties(type).Any();
+        object value = null;
+        if (!Engine.IsEditorHint())
+        {
+            value = memberInfo switch
+            {
+                FieldInfo fieldInfo => fieldInfo.GetValue(node),
+                PropertyInfo propertyInfo => propertyInfo.GetValue(node),
+                _ => throw new InvalidOperationException("MemberInfo must be of type FieldInfo or PropertyInfo")
+            };    
+        }
+        else
+        {
+            value = node.Get(memberInfo.Name).Obj;
+        }
+        
+        return value;
     }
-    
+
+    private void SetMemberValue(Node node, Variant value, MemberInfo memberInfo)
+    {
+        if (!Engine.IsEditorHint())
+        {
+            switch (memberInfo)
+            {
+                case FieldInfo fieldInfo:
+                    fieldInfo.SetValue(node, value.Obj);
+                    break;
+                case PropertyInfo propertyInfo:
+                    propertyInfo.SetValue(node, value.Obj);
+                    break;
+                default:
+                    throw new InvalidOperationException("MemberInfo must be of type FieldInfo or PropertyInfo");
+            }    
+        }
+        else
+        {
+            node.Set(memberInfo.Name, value);
+        }
+    }
+
+    private void ClearMemberValue(Node node, MemberInfo memberInfo)
+    {
+        if(!Engine.IsEditorHint())
+        {
+            switch (memberInfo)
+            {
+                case FieldInfo fieldInfo:
+                    fieldInfo.SetValue(node, null);
+                    break;
+                case PropertyInfo propertyInfo:
+                    propertyInfo.SetValue(node, null);
+                    break;
+                default:
+                    throw new InvalidOperationException("MemberInfo must be of type FieldInfo or PropertyInfo");
+            }
+        }
+        else
+        {
+            node.Set(memberInfo.Name, default);
+        }
+    }
+
+    public static bool IsLogInfoEnabled => false;
+
+    public static bool IsLogWarningEnabled => true;
+
+    public static bool IsLogErrorEnabled => true;
+
+    public static bool IsLogCriticalEnabled => true;
 }

@@ -12,7 +12,7 @@ public partial class InjectTest : Node
     [Export, InjectParent] private Node _parentField;
     [Export, InjectAncestor] private Node2D _ancestorField;
     [Export, InjectParentSibling] private CanvasModulate _parentSiblingField;
-    [Export, InjectChild, InjectAncestor] private Array<CanvasItem> _childrenAndParentsField = new();
+    [Export, InjectChild, InjectAncestor, InjectParentSibling] private Array<CanvasItem> _childrenAndParentsField = new();
 
     [ExportGroup("Properties")]
     [Export, InjectChild] private CsgBox3D ChildProperty { get; set; }
@@ -20,6 +20,6 @@ public partial class InjectTest : Node
     [Export, InjectParent] private Node ParentProperty { get; set; }
     [Export, InjectAncestor] private Node2D AncestorProperty { get; set; }
     [Export, InjectParentSibling] private CanvasModulate ParentSiblingProperty { get; set; }
-    [Export, InjectChild, InjectAncestor] private Array<CanvasItem> ChildrenAndParentsProperty { get; set; } = new();
+    [Export, InjectChild, InjectAncestor, InjectParentSibling] private Array<CanvasItem> ChildrenAndParentsProperty { get; set; } = new();
 
 }
