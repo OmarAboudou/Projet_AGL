@@ -34,6 +34,16 @@ public static class LoggingSystem
             SeparatorsPerType.Add(type, DefaultSeparator);
         }
     }
+
+    public static void SetSeparator<T>(this ILoggable<T> loggable, string separator) where T : ILoggable<T>
+    {
+        SeparatorsPerType.Add(typeof(T), separator);
+    }
+
+    public static string GetSeparator<T>(this ILoggable<T> loggable) where T : ILoggable<T>
+    {
+        return SeparatorsPerType.GetValueOrDefault(typeof(T), DefaultSeparator);
+    }
     
     public static void LogInfo<T>(this ILoggable<T> loggable, params object[] messages) where T : ILoggable<T>
     {
