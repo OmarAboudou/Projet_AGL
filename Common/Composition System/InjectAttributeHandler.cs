@@ -268,13 +268,15 @@ public sealed partial class InjectAttributeHandler : Node
     
     private void OnNodeAdded(Node node)
     {
-        if (Engine.IsEditorHint())
+        if (Engine.IsEditorHint() && node.IsPartOfEditedScene())
         {
-            if (node.IsPartOfEditedScene())
-            {
+            Callable callable = Callable.From(this.ScheduleInjectAll);
+
+            if (!node.IsConnected(Node.SignalName.ChildOrderChanged, callable))
                 node.ChildOrderChanged += this.ScheduleInjectAll;
+
+            if (!node.IsConnected(GodotObject.SignalName.ScriptChanged, callable))
                 node.ScriptChanged += this.ScheduleInjectAll;
-            }
         }
         
         if(!this.IsHandled(node)) return;
@@ -287,11 +289,13 @@ public sealed partial class InjectAttributeHandler : Node
     {
         if (Engine.IsEditorHint())
         {
-            if (node.IsPartOfEditedScene())
-            {
+            Callable callable = Callable.From(this.ScheduleInjectAll);
+
+            if (node.IsConnected(Node.SignalName.ChildOrderChanged, callable))
                 node.ChildOrderChanged -= this.ScheduleInjectAll;
+
+            if (node.IsConnected(GodotObject.SignalName.ScriptChanged, callable))
                 node.ScriptChanged -= this.ScheduleInjectAll;
-            }
         }
         
         if(this._handledNodes.Contains(node))
