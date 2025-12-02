@@ -35,7 +35,7 @@ public partial class PackedSceneWrapper : Resource
         return this.Scene.Instantiate<T>(editState);
     }
 
-    public T InstantiateOrNull<T>(PackedScene.GenEditState editState) where T : class
+    public T InstantiateOrNull<T>(PackedScene.GenEditState editState = PackedScene.GenEditState.Disabled) where T : class
     {
         return this.Scene.InstantiateOrNull<T>(editState);
     }
