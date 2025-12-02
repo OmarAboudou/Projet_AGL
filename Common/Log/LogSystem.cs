@@ -27,8 +27,8 @@ public static class LogSystem
 
     public static void SetLogEnabled<T>(LogType logType, bool enabled) where T : class
     {
-        if(enabled) LogEnabledObjectDictionary[logType].Add(typeof(T));
-        else LogEnabledObjectDictionary[logType].Remove(typeof(T));
+        if(enabled) LogEnabledTypeDictionary[logType].Add(typeof(T));
+        else LogEnabledTypeDictionary[logType].Remove(typeof(T));
     }
 
     public static void Log(this object source, LogType logType, params object[] messages)
@@ -36,7 +36,7 @@ public static class LogSystem
         if(!source.IsLogEnabled(logType)) return;
         
         PrintingFunctionDelegate printingFunctionDelegate = GetLogFunction(logType);
-        printingFunctionDelegate?.Invoke(messages: [$"[{Enum.GetName(logType)}]", $"[{source.GetType()}:{source}]", ..messages]);
+        printingFunctionDelegate?.Invoke(messages: [$"[{Enum.GetName(logType)}]", $"[{source.GetType().Name}:{source}]", ..messages]);
     }
 
     public static void Log<T>(LogType logType, params object[] messages) where T : class
@@ -45,7 +45,7 @@ public static class LogSystem
         
         
         PrintingFunctionDelegate printingFunctionDelegate = GetLogFunction(logType);
-        printingFunctionDelegate?.Invoke(messages: [$"[{Enum.GetName(logType)}]", $"[{nameof(T)}]", ..messages]);
+        printingFunctionDelegate?.Invoke(messages: [$"[{Enum.GetName(logType)}]", $"[{typeof(T).Name}]", ..messages]);
     }
 
     private static PrintingFunctionDelegate GetLogFunction(LogType logType)
@@ -67,6 +67,7 @@ public static class LogSystem
     private static bool IsLogEnabled(this object source, LogType logType)
     {
         return LogEnabledObjectDictionary[logType].Contains(source) || LogEnabledTypeDictionary[logType].Contains(source.GetType());
+
     }
 
     private static bool IsLogEnabled<T>(LogType logType) where T : class
