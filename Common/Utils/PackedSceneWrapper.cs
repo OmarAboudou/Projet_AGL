@@ -1,3 +1,4 @@
+using System;
 using Common.Log;
 using Godot;
 
@@ -31,9 +32,10 @@ where T : class
                 return;
             }
             
-            if (!value.GetRootNodeType().IsAssignableTo(typeof(T)))
+            Type rootNodeType = value.GetRootNodeType();
+            if (!rootNodeType.IsAssignableTo(typeof(T)))
             {
-                LogSystem.Log<PackedSceneWrapper<T>>(LogType.WARNING, $"Scene {value.ResourceName} must have a root node of a type assignable to type {typeof(T).Name}");
+                LogSystem.Log<PackedSceneWrapper<T>>(LogType.WARNING, $"Scene {value.ResourceName} root node is of type '{rootNodeType.Name}' and is not assignable to type '{typeof(T).Name}'");
                 this.NotifyPropertyListChanged();
                 return;
             }
