@@ -4,17 +4,11 @@ using Godot;
 
 namespace Common.Utils;
 
-public abstract partial class PackedSceneWrapper : Resource
+public partial class PackedSceneWrapper(Type expectedSceneType) : Resource
 {
     public PackedSceneWrapper() : this(typeof(object)) { }
 
     private PackedScene _scene;
-    private readonly Type _expectedSceneType;
-
-    public PackedSceneWrapper(Type expectedSceneType)
-    {
-        this._expectedSceneType = expectedSceneType;
-    }
 
     [Export]
     public PackedScene Scene
@@ -29,9 +23,9 @@ public abstract partial class PackedSceneWrapper : Resource
             }
             
             Type rootNodeType = value.GetRootNodeType();
-            if (!rootNodeType.IsAssignableTo(this._expectedSceneType))
+            if (!rootNodeType.IsAssignableTo(expectedSceneType))
             {
-                LogSystem.Log<PackedSceneWrapper>(LogType.WARNING, $"Scene {value.ResourceName} root node is of type '{rootNodeType.Name}' and is not assignable to type '{this._expectedSceneType.Name}'");
+                LogSystem.Log<PackedSceneWrapper>(LogType.WARNING, $"Scene {value.ResourceName} root node is of type '{rootNodeType.Name}' and is not assignable to type '{expectedSceneType.Name}'");
                 this.NotifyPropertyListChanged();
                 return;
             }
