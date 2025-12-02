@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.5", "C#", "Mobile")
 [autoload]
 
 InjectAttributeHandler="*res://Common/Composition System/InjectAttributeHandler.cs"
+SceneTransitionSystem="*res://src/Scene Transition System/SceneTransitionSystem.tscn"
 
 [dotnet]
 
@@ -33,3 +34,4 @@ folder_colors={
 [rendering]
 
 renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)

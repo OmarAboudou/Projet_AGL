@@ -9,18 +9,13 @@
     <Content Include="Client\Client.tscn" />
     <Content Include="Client\Server_Discovery\ServerDiscoveryRequester.cs.uid" />
     <Content Include="Common\.gitkeep" />
-    <Content Include="Common\Logging System\ILoggable.cs.uid" />
-    <Content Include="Common\Logging System\LoggingSystem.cs.uid" />
-    <Content Include="Common\README.md" />
+    <Content Include="Common\Log System\LogSystem.cs.uid" />
+    <Content Include="Common\Log System\LogType.cs.uid" />
+<Content Include="Common\README.md" />
     <Content Include="Server\Server.tscn" />
     <Content Include="Server\Server_Discovery\.gitkeep" />
     <Content Include="Server\Server_Discovery\ServerDiscoveryResponder.cs.uid" />
-    <Content Include="src\Game System\GameInProgressState.cs.uid" />
-    <Content Include="src\Game System\GameState.cs.uid" />
-    <Content Include="src\Game System\GameStateSystem.cs.uid" />
-    <Content Include="src\Game System\MainMenuState.cs.uid" />
-    <Content Include="src\Game System\SplashScreenState.cs.uid" />
-    <Content Include="src\Scene Loading System\SceneLoadingSystem.cs.uid" />
-    <Content Include="src\Scene Loading System\TransitionScreen.cs.uid" />
+    <Content Include="src\Scene Transition System\SceneTransitionSystem.cs.uid" />
+    <Content Include="src\Scene Transition System\TransitionScreen.cs.uid" />
   </ItemGroup>
 </Project>
