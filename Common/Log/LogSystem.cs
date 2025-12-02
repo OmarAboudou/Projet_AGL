@@ -54,7 +54,7 @@ public static class LogSystem
         {
             LogType.INFO => GD.Print,
             LogType.WARNING => GD.PushWarning,
-            LogType.ERROR => GD.PrintErr,
+            LogType.ERROR => GD.PushError,
             LogType.CRITICAL => GD.PushError,
             _ => messages =>
             {
