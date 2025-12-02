@@ -28,8 +28,15 @@ public partial class MainMenuSystem : Control
             this.Log(LogType.ERROR, $"The scene {menuScene.ResourceName} must have a control node at its root.");
             return;
         }
+
+        if (this._sceneInstancesStack.Count > 0)
+        {
+            Control currentMenu = this._sceneInstancesStack.Peek();
+            currentMenu.SetAllProcessing(false);
+        }
         
         Control instance = menuScene.Instantiate<Control>();
+        instance.SetAllProcessing(true);
         this.AddChild(instance);
         this._sceneStack.Push(menuScene);
         this._sceneInstancesStack.Push(instance);

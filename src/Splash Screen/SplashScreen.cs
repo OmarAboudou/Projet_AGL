@@ -6,7 +6,7 @@ namespace Splash_Screen;
 
 public partial class SplashScreen : Control
 {
-    [Export] private PackedScene _mainMenuScene;
+    [Export] private PackedScene _lobbySelectionMenuScene;
     [Export, InjectAncestor] private MainMenuSystem _mainMenuSystem;
 
     public override void _PhysicsProcess(double delta)
@@ -14,7 +14,7 @@ public partial class SplashScreen : Control
         base._PhysicsProcess(delta);
         if (Input.IsAnythingPressed())
         {
-            this._mainMenuSystem.StackMenuScene(this._mainMenuScene);
+            this._mainMenuSystem.StackMenuScene(this._lobbySelectionMenuScene);
         }
     }
 }
