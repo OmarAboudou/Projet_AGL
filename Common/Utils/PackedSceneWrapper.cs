@@ -20,12 +20,14 @@ where T : class
         return typedSceneWrapper.Scene;
     }
 
-    public PackedSceneWrapper<T1> Cast<T1>() where T1 : class
+    public T1 Cast<T1, T2>() 
+    where T1 : PackedSceneWrapper<T2>, new()
+    where T2 : class
     {
         Type sceneType = Scene.GetRootNodeType();
         if (sceneType.IsAssignableTo(typeof(T1)))
         {
-            PackedSceneWrapper<T1> packedSceneWrapper = new PackedSceneWrapper<T1>();
+            T1 packedSceneWrapper = new T1();
             packedSceneWrapper.Scene = this._scene;
             return packedSceneWrapper;
         }
