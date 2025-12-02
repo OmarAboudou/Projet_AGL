@@ -18,6 +18,31 @@ public partial class PackedSceneWrapper : Resource
         this._expectedSceneType = expectedSceneType;
     }
 
+    public Node Instantiate(PackedScene.GenEditState editState = PackedScene.GenEditState.Disabled)
+    {
+        return this.Scene.Instantiate(editState);
+    }
+
+    public T Instantiate<T>(PackedScene.GenEditState editState = PackedScene.GenEditState.Disabled) where T : class
+    {
+        return this.Scene.Instantiate<T>(editState);
+    }
+
+    public T InstantiateOrNull<T>(PackedScene.GenEditState editState) where T : class
+    {
+        return this.Scene.InstantiateOrNull<T>(editState);
+    }
+
+    public bool CanInstantiate()
+    {
+        return this.Scene.CanInstantiate();
+    }
+
+    public Error Pack(Node path)
+    {
+        return this.Scene.Pack(path);
+    }
+
     public static implicit operator PackedScene(PackedSceneWrapper wrapper) { return wrapper.Scene; }
     
     [Export]
