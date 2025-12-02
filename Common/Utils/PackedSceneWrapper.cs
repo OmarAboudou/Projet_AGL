@@ -4,20 +4,10 @@ using Godot;
 
 namespace Common.Utils;
 
-[Tool, GlobalClass]
-public abstract partial class PackedSceneWrapper : Resource
+public abstract partial class PackedSceneWrapper<T> : Resource
+    where T : class
 {
-    private PackedScene _scene;
-    protected abstract Type GenericType { get; }
-    static PackedSceneWrapper()
-    {
-        LogSystem.SetLogEnabled<PackedSceneWrapper>(LogType.WARNING, true);
-    }
-
-    public static implicit operator PackedScene(PackedSceneWrapper packedSceneWrapper)
-    {
-        return packedSceneWrapper.Scene;
-    }
+    private PackedScene _scene { get; set; }
     
     [Export]
     public PackedScene Scene
@@ -32,9 +22,9 @@ public abstract partial class PackedSceneWrapper : Resource
             }
             
             Type rootNodeType = value.GetRootNodeType();
-            if (!rootNodeType.IsAssignableTo(GenericType))
+            if (!rootNodeType.IsAssignableTo(typeof(T)))
             {
-                LogSystem.Log<PackedSceneWrapper>(LogType.WARNING, $"Scene {value.ResourceName} root node is of type '{rootNodeType.Name}' and is not assignable to type '{GenericType.Name}'");
+                LogSystem.Log<PackedSceneWrapper<T>>(LogType.WARNING, $"Scene {value.ResourceName} root node is of type '{rootNodeType.Name}' and is not assignable to type '{typeof(T).Name}'");
                 this.NotifyPropertyListChanged();
                 return;
             }
