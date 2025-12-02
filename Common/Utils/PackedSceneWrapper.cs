@@ -56,7 +56,7 @@ public partial class PackedSceneWrapper : Resource
     public PackedScene Scene
     {
         get => this._scene;
-        private set
+        set
         {
             if (value == null)
             {
