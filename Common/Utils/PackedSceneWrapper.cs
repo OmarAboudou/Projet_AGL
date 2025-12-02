@@ -18,6 +18,8 @@ public partial class PackedSceneWrapper : Resource
         this._expectedSceneType = expectedSceneType;
     }
 
+    public static implicit operator PackedScene(PackedSceneWrapper wrapper) { return wrapper.Scene; }
+    
     [Export]
     public PackedScene Scene
     {
