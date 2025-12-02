@@ -13,6 +13,13 @@ public partial class PackedSceneWrapper : Resource
     private PackedScene _scene;
     private readonly Type _expectedSceneType;
 
+    static PackedSceneWrapper()
+    {
+        LogSystem.SetLogEnabled<PackedSceneWrapper>(LogType.WARNING, true);
+        LogSystem.SetLogEnabled<PackedSceneWrapper>(LogType.ERROR, true);
+        LogSystem.SetLogEnabled<PackedSceneWrapper>(LogType.CRITICAL, true);
+    }
+    
     public PackedSceneWrapper(Type expectedSceneType)
     {
         this._expectedSceneType = expectedSceneType;
