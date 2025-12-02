@@ -41,4 +41,19 @@ where T : class
             this._scene = value;
         }
     }
+    
+    public T Instantiate(PackedScene.GenEditState editState = 0)
+    {
+        return this.Scene.Instantiate<T>(editState);
+    }
+
+    public T1 Instantiate<T1>(PackedScene.GenEditState editState = 0) where T1 : class
+    {
+        return this.Scene.Instantiate<T1>(editState);
+    }
+
+    public T1 InstantiateOrNull<T1>() where T1 : class
+    {
+        return this.Scene.InstantiateOrNull<T1>();
+    }
 }
