@@ -15,8 +15,6 @@
     <Content Include="Server\Server.tscn" />
     <Content Include="Server\Server_Discovery\.gitkeep" />
     <Content Include="Server\Server_Discovery\ServerDiscoveryResponder.cs.uid" />
-    <Content Include="src\App.cs.uid" />
-    <Content Include="src\App.tscn" />
     <Content Include="src\Main Menu\MainMenu.cs.uid" />
     <Content Include="src\Main Menu\MenuData.cs.uid" />
     <Content Include="src\Scene Transition System\SceneTransitionSystem.cs.uid" />

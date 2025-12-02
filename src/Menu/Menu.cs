@@ -35,13 +35,27 @@ public partial class Menu : Control
         instance.Show();
         this._menuContainer.AddChild(instance);
         this._menuNameLabel.Text = menuData.MenuName;
+        this.UpdateButtonState();
+    }
+
+    private void UpdateButtonState()
+    {
+        this._goBackButton.Disabled = !this.CanGoBack();
     }
     
     private void GoBackButtonOnPressed()
     {
         if(!this.CanGoBack()) return;
         
+        this._menuSceneRootStack.Pop().QueueFree();
+        this._menuDataStack.Pop();
         
+        MenuPanelData newCurrentData = this._menuDataStack.Peek();
+        MenuPanel newCurrentPanel =  this._menuSceneRootStack.Peek();
+        newCurrentPanel.Show();
+        
+        this._menuNameLabel.Text = newCurrentData.MenuName;
+        this.UpdateButtonState();
     }
 
     private bool CanGoBack()

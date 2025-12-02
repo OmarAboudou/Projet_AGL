@@ -1,20 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://4hps2aqgshds"]
+[gd_scene load_steps=2 format=3 uid="uid://4hps2aqgshds"]
 
 [ext_resource type="Script" uid="uid://b8523ddprya0g" path="res://src/Menu/Menu.cs" id="1_xkv8w"]
-[ext_resource type="Script" uid="uid://csbx7edg2ohct" path="res://src/Menu/MenuScene.cs" id="2_drck2"]
-[ext_resource type="Script" uid="uid://c8lrdvhnq0hhm" path="res://src/Menu/MenuData.cs" id="3_drck2"]
 
-[sub_resource type="Resource" id="Resource_x67kt"]
-script = ExtResource("2_drck2")
-metadata/_custom_type_script = "uid://csbx7edg2ohct"
-
-[sub_resource type="Resource" id="Resource_mmgkr"]
-script = ExtResource("3_drck2")
-MenuName = "Lobby Type Selection"
-MenuScene = SubResource("Resource_x67kt")
-metadata/_custom_type_script = "uid://c8lrdvhnq0hhm"
-
-[node name="Menu" type="Control" node_paths=PackedStringArray("_menuNameLabel", "_menuContainer")]
+[node name="Menu" type="Control" node_paths=PackedStringArray("_menuNameLabel", "_goBackButton", "_menuContainer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,8 +12,8 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_xkv8w")
-_initialMenuData = SubResource("Resource_mmgkr")
 _menuNameLabel = NodePath("Black Background/Content/MarginContainer/VBoxContainer/PanelContainer/Control/MenuName")
+_goBackButton = NodePath("Black Background/Content/MarginContainer/VBoxContainer/PanelContainer/Control/GoBackButton")
 _menuContainer = NodePath("Black Background/Content/MarginContainer/VBoxContainer/Menu Container")
 
 [node name="Black Background" type="PanelContainer" parent="."]
@@ -53,7 +41,7 @@ size_flags_vertical = 3
 [node name="Control" type="Control" parent="Black Background/Content/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="←" type="Button" parent="Black Background/Content/MarginContainer/VBoxContainer/PanelContainer/Control"]
+[node name="GoBackButton" type="Button" parent="Black Background/Content/MarginContainer/VBoxContainer/PanelContainer/Control"]
 layout_mode = 1
 anchors_preset = -1
 anchor_bottom = 1.0
