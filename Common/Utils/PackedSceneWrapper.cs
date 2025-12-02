@@ -11,7 +11,7 @@ public partial class PackedSceneWrapper : Resource
     public PackedSceneWrapper() { }
 
     private PackedScene _scene;
-    private readonly Type _expectedSceneType;
+    private Type ExpectedSceneType { get; set; }
 
     static PackedSceneWrapper()
     {
@@ -22,7 +22,7 @@ public partial class PackedSceneWrapper : Resource
     
     public PackedSceneWrapper(Type expectedSceneType)
     {
-        this._expectedSceneType = expectedSceneType;
+        this.ExpectedSceneType = expectedSceneType;
     }
 
     public Node Instantiate(PackedScene.GenEditState editState = PackedScene.GenEditState.Disabled)
@@ -65,9 +65,9 @@ public partial class PackedSceneWrapper : Resource
             }
             
             Type rootNodeType = value.GetRootNodeType();
-            if (!rootNodeType.IsAssignableTo(this._expectedSceneType))
+            if (!rootNodeType.IsAssignableTo(this.ExpectedSceneType))
             {
-                LogSystem.Log<PackedSceneWrapper>(LogType.WARNING, $"Scene {value.ResourceName} root node is of type '{rootNodeType.Name}' and is not assignable to type '{this._expectedSceneType.Name}'");
+                LogSystem.Log<PackedSceneWrapper>(LogType.WARNING, $"Scene {value.ResourceName} root node is of type '{rootNodeType.Name}' and is not assignable to type '{this.ExpectedSceneType?.Name}'");
                 this.NotifyPropertyListChanged();
                 return;
             }
@@ -78,8 +78,8 @@ public partial class PackedSceneWrapper : Resource
 
     public override Variant _Get(StringName property)
     {
-        return property.ToString() == nameof(this._expectedSceneType) ? 
-            this._expectedSceneType.Name :
+        return property.ToString() == nameof(this.ExpectedSceneType) ? 
+            this.ExpectedSceneType.Name :
             base._Get(property);
     }
 
@@ -89,7 +89,7 @@ public partial class PackedSceneWrapper : Resource
         [
             new Dictionary
             {
-                ["name"] = nameof(this._expectedSceneType),
+                ["name"] = nameof(this.ExpectedSceneType),
                 ["type"] = (int)Variant.Type.String,
                 ["usage"] = (int)(PropertyUsageFlags.Editor | PropertyUsageFlags.ReadOnly),
             }
