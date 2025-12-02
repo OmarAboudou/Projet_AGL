@@ -4,7 +4,7 @@ using Godot;
 namespace Menu;
 
 [Tool, GlobalClass]
-public partial class MenuPanelScene : TypeSafePackedSceneHolder<MenuPanel>
+public partial class MenuPanelScene : PackedSceneWrapper<MenuPanel>
 {
     
 }
