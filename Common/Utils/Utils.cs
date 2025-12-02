@@ -7,16 +7,29 @@ public static class Utils
 {
     public static Type GetRootNodeType(this PackedScene scene)
     {
-        string rootNodeType = scene._Bundled["names"].AsGodotArray<string>()[1];
-        if (rootNodeType == "script")
+        SceneState state = scene.GetState();
+        const int rootIndex = 0;
+        StringName rootNodeGodotType = state.GetNodeType(0);
+        CSharpScript rootNodeScript = null;
+        int propCount = state.GetNodePropertyCount(0);
+        
+        for (int propIdx = 0; propIdx < propCount; propIdx++)
         {
-            CSharpScript script = scene._Bundled["variants"].AsGodotArray()[1].Obj as CSharpScript;
-            return script.New().Obj.GetType();
+            StringName propName = state.GetNodePropertyName(rootIndex, propIdx);
+            if (propName == "script")
+            {
+                rootNodeScript = state.GetNodePropertyValue(rootIndex, propIdx).As<CSharpScript>();
+                break;
+            }
         }
-        else
+
+        if (rootNodeScript == null)
         {
-            return typeof(Node).Assembly.GetType($"Godot.{rootNodeType}");
+            return typeof(Node).Assembly.GetType($"Godot.{rootNodeGodotType}");
         }
+
+        return rootNodeScript.GetScriptType();
+
     }
 
     public static Type GetScriptType(this Script script) => (script as CSharpScript)?.New().Obj?.GetType();
