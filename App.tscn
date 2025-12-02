@@ -1,3 +1,20 @@
-[gd_scene format=3 uid="uid://cabaxdwkysgff"]
+[gd_scene load_steps=3 format=3 uid="uid://cabaxdwkysgff"]
+
+[ext_resource type="Script" uid="uid://dtef23jt23s41" path="res://src/Main Menu/MainMenuSystem.cs" id="1_oaicl"]
+[ext_resource type="PackedScene" uid="uid://bayhslgms5w1l" path="res://src/Splash Screen/SplashScreenMenu.tscn" id="2_oxmao"]
 
 [node name="App" type="Node"]
+
+[node name="MainMenuSystem" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_oaicl")
+_initialScene = ExtResource("2_oxmao")
+
+[node name="SplashScreenMenu" parent="MainMenuSystem" node_paths=PackedStringArray("_mainMenuSystem") instance=ExtResource("2_oxmao")]
+layout_mode = 1
+_mainMenuSystem = NodePath("..")
