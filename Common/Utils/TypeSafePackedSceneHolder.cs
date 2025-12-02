@@ -52,8 +52,8 @@ where T : class
         return this.Scene.Instantiate<T1>(editState);
     }
 
-    public T1 InstantiateOrNull<T1>() where T1 : class
+    public T1 InstantiateOrNull<T1>(PackedScene.GenEditState editState = 0) where T1 : class
     {
-        return this.Scene.InstantiateOrNull<T1>();
+        return this.Scene.InstantiateOrNull<T1>(editState);
     }
 }
