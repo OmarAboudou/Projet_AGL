@@ -5,7 +5,7 @@ using Godot;
 namespace Common.Utils;
 
 [Tool]
-public abstract partial class PackedSceneWrapper<T> : Resource
+public partial class PackedSceneWrapper<T> : Resource
 where T : class
 {
     private PackedScene _scene;
@@ -19,7 +19,19 @@ where T : class
     {
         return typedSceneWrapper.Scene;
     }
-    
+
+    public PackedSceneWrapper<T1> Cast<T1>() where T1 : class
+    {
+        Type sceneType = Scene.GetRootNodeType();
+        if (sceneType.IsAssignableTo(typeof(T1)))
+        {
+            PackedSceneWrapper<T1> packedSceneWrapper = new PackedSceneWrapper<T1>();
+            packedSceneWrapper.Scene = this._scene;
+            return packedSceneWrapper;
+        }
+        throw new InvalidCastException($"Cannot cast scene from type {sceneType.Name} to {typeof(T1).Name}");
+    }
+
     [Export]
     public PackedScene Scene
     {
@@ -43,7 +55,9 @@ where T : class
             this._scene = value;
         }
     }
+
     
+
     public T Instantiate(PackedScene.GenEditState editState = 0)
     {
         return this.Scene.Instantiate<T>(editState);
