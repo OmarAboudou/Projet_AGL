@@ -15,6 +15,7 @@ public sealed partial class InjectAttributeHandler : Node
 {
     private readonly List<Node> _handledNodes = new();
     private bool _injectAllQueued;
+    private Callable _scheduleInjectAllCallable;
 
     public override void _Ready()
     {
@@ -28,9 +29,10 @@ public sealed partial class InjectAttributeHandler : Node
     public override void _EnterTree()
     {
         base._EnterTree();
+        this._scheduleInjectAllCallable = Callable.From(this.ScheduleInjectAll);
         this.GetTree().NodeAdded += this.OnNodeAdded;
         this.GetTree().NodeRemoved += this.OnNodeRemoved;
-        if (!Engine.IsEditorHint())
+        /*if (!Engine.IsEditorHint())
         {
             this.GetTree().Root.Ready += RootOnReady;
 
@@ -40,7 +42,7 @@ public sealed partial class InjectAttributeHandler : Node
                 this.GetTree().TreeChanged += this.ScheduleInjectAll;
             }
 
-        }
+        }*/
     }
     
     public override void _ExitTree()
@@ -48,10 +50,10 @@ public sealed partial class InjectAttributeHandler : Node
         base._ExitTree();
         this.GetTree().NodeAdded -= this.OnNodeAdded;
         this.GetTree().NodeRemoved -= this.OnNodeRemoved;
-        if (!Engine.IsEditorHint())
+        /*if (!Engine.IsEditorHint())
         {
             this.GetTree().TreeChanged -= this.ScheduleInjectAll;
-        }
+        }*/
     }
     
     private void ScheduleInjectAll()
@@ -267,7 +269,9 @@ public sealed partial class InjectAttributeHandler : Node
     
     private void OnNodeAdded(Node node)
     {
-        if (Engine.IsEditorHint() && node.IsPartOfEditedScene())
+        if(Engine.IsEditorHint() && !node.IsPartOfEditedScene()) return;
+        
+        /*if (Engine.IsEditorHint() && node.IsPartOfEditedScene())
         {
             Callable callable = Callable.From(this.ScheduleInjectAll);
 
@@ -277,16 +281,35 @@ public sealed partial class InjectAttributeHandler : Node
             if (!node.IsConnected(GodotObject.SignalName.ScriptChanged, callable))
                 node.ScriptChanged += this.ScheduleInjectAll;
         }
-        
-        if(!this.IsHandled(node)) return;
+        */
+        // if(!this.IsHandled(node)) return;
         
         this._handledNodes.Add(node);
-        this.UpdateInjection(node);
+        
+        Node owner = node.GetOwner();
+        if (owner == null || owner.IsNodeReady())
+        {
+            this.ScheduleInjectAll();
+        }
+        else
+        {
+            if (owner.IsConnected(Node.SignalName.Ready, this._scheduleInjectAllCallable)) return;
+            
+            owner.Ready += OwnerOnReady;
+            void OwnerOnReady()
+            {
+                owner.Ready -= OwnerOnReady;
+                this.ScheduleInjectAll();
+            }
+            
+        }
     }
 
     private void OnNodeRemoved(Node node)
     {
-        if (Engine.IsEditorHint())
+        if(Engine.IsEditorHint() && !node.IsPartOfEditedScene()) return;
+        
+        /*if (Engine.IsEditorHint())
         {
             Callable callable = Callable.From(this.ScheduleInjectAll);
 
@@ -296,10 +319,11 @@ public sealed partial class InjectAttributeHandler : Node
             if (node.IsConnected(GodotObject.SignalName.ScriptChanged, callable))
                 node.ScriptChanged -= this.ScheduleInjectAll;
         }
-        
+        */
         if(this._handledNodes.Contains(node))
         {
             this._handledNodes.Remove(node);
+            this.ScheduleInjectAll();
         }
     }
     
