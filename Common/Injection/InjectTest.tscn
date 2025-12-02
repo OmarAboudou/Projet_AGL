@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://gdr62if74xo1"]
 
-[ext_resource type="Script" uid="uid://ch8acq5gwbcpf" path="res://Common/Composition System/InjectTest.cs" id="1_b750v"]
-[ext_resource type="Script" uid="uid://hbqmvfn00w1j" path="res://Common/Composition System/InjectableNode.cs" id="2_77h0y"]
+[ext_resource type="Script" uid="uid://ch8acq5gwbcpf" path="res://Common/Injection/InjectTest.cs" id="1_b750v"]
+[ext_resource type="Script" uid="uid://hbqmvfn00w1j" path="res://Common/Injection/InjectableNode.cs" id="2_77h0y"]
 
 [node name="FarParent" type="Node2D"]
 

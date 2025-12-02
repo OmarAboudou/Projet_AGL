@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Godot;
 
-namespace Common.Composition_System.Inject_Attributes;
+namespace Common.Injection.Inject_Attributes;
 
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public abstract class InjectAttribute : Attribute

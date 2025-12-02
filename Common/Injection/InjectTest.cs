@@ -1,8 +1,8 @@
-using Common.Composition_System.Inject_Attributes;
+using Common.Injection.Inject_Attributes;
 using Godot;
 using Godot.Collections;
 
-namespace Common.Composition_System;
+namespace Common.Injection;
 
 public sealed partial class InjectTest : Node
 {

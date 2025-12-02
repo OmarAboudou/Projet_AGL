@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Common.Composition_System;
+namespace Common.Injection;
 
 public sealed partial class InjectableNode : Node
 {

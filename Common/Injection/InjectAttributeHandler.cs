@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using Common.Injection.Inject_Attributes;
+using Common.Log;
 using Common.Utils;
-using Common.Composition_System.Inject_Attributes;
-using Common.Log_System;
 using Godot;
 
-namespace Common.Composition_System;
+namespace Common.Injection;
 
 [Tool]
 public sealed partial class InjectAttributeHandler : Node
@@ -44,17 +44,17 @@ public sealed partial class InjectAttributeHandler : Node
     
     private void ScheduleInjectAll()
     {
-        if (_injectAllQueued)
+        if (this._injectAllQueued)
             return;
 
-        _injectAllQueued = true;
-        CallDeferred(nameof(DeferredInjectAll));
+        this._injectAllQueued = true;
+        this.CallDeferred(nameof(this.DeferredInjectAll));
     }
 
     private void DeferredInjectAll()
     {
-        _injectAllQueued = false;
-        InjectAll();
+        this._injectAllQueued = false;
+        this.InjectAll();
     }
 
     
@@ -76,22 +76,22 @@ public sealed partial class InjectAttributeHandler : Node
         if (injectAttributes.Length == 0)
             return;
 
-        List<Node> candidates = BuildCandidates(injected, injectAttributes);
+        List<Node> candidates = this.BuildCandidates(injected, injectAttributes);
 
-        Type memberType = GetMemberType(injectedMemberInfo);
+        Type memberType = this.GetMemberType(injectedMemberInfo);
 
         bool isCollection = TryGetCollectionElementType(memberType, out Type elementType);
         List<Node> validCandidates = candidates
-            .Where(c => GetNodeType(c).IsAssignableTo(isCollection ? elementType : memberType))
+            .Where(c => this.GetNodeType(c).IsAssignableTo(isCollection ? elementType : memberType))
             .ToList();
             
         if (isCollection)
         {
-            InjectCollection(injected, injectedMemberInfo, elementType, validCandidates);
+            this.InjectCollection(injected, injectedMemberInfo, elementType, validCandidates);
         }
         else
         {
-            InjectSingle(injected, injectedMemberInfo, memberType, validCandidates);
+            this.InjectSingle(injected, injectedMemberInfo, memberType, validCandidates);
         }
     }
 
@@ -182,7 +182,7 @@ public sealed partial class InjectAttributeHandler : Node
         this.Log(LogType.INFO, $"{injectedMemberInfo.Name} is collection type {injectedMemberInfo.MemberType} " +
                                              $"of elements of type : {elementType.Name}.");
         
-        object collectionInstance = GetMemberValue(injected, injectedMemberInfo);
+        object collectionInstance = this.GetMemberValue(injected, injectedMemberInfo);
 
         if (collectionInstance == null)
         {
@@ -227,7 +227,7 @@ public sealed partial class InjectAttributeHandler : Node
         if (validCandidates.Count == 0)
         {
             this.Log(LogType.ERROR,$"Couldn't find any candidate for {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
-            ClearMemberValue(injected, injectedMemberInfo);
+            this.ClearMemberValue(injected, injectedMemberInfo);
             return;
         }
 
@@ -237,7 +237,7 @@ public sealed partial class InjectAttributeHandler : Node
         }
 
         Node injection = validCandidates[0];
-        SetMemberValue(injected, injection, injectedMemberInfo);
+        this.SetMemberValue(injected, injection, injectedMemberInfo);
         
         this.Log(LogType.INFO,$"Injected {injection.Name} into {memberKind} {injected.Name}.{injectedMemberInfo.Name}");
     }

@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Godot;
 
-namespace Common.Composition_System.Inject_Attributes;
+namespace Common.Injection.Inject_Attributes;
 
 public class InjectChildAttribute : InjectAttribute
 {

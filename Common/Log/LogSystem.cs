@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-namespace Common.Log_System;
+namespace Common.Log;
 
 public static class LogSystem
 {
