@@ -11,7 +11,7 @@ public partial class PackedSceneWrapper : Resource
     public PackedSceneWrapper() { }
 
     private PackedScene _scene;
-    private Type ExpectedSceneType { get; set; }
+    private Type ExpectedSceneType { get; } = typeof(object);
 
     static PackedSceneWrapper()
     {
