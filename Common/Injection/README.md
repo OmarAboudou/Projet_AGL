@@ -14,13 +14,14 @@ the union of every surroundings of every **InjectAttributes**.
 
 ### Attributes
 
-|Name|Usage|
-|:--:|:--:|
-|InjectSibling|Inject a node that is a sibling of the current node|
-|InjectChild|Inject a node that is a child of the current node|
-|InjectParent|Inject the parent of the current node|
-|InjectAncestor|Inject a node that is an ancestor of the current node|
-|InjectParentSibling|Inject a node that is a sibling of the parent of the current node|
+|        Name         |                                      Usage                                       |
+|:-------------------:|:--------------------------------------------------------------------------------:|
+|    InjectSibling    |            Inject a node that has the same parent as the current one             |
+|     InjectChild     |                 Inject a node that is a child of the current one                 |
+|    InjectParent     |                      Inject the parent of the current node                       |
+|   InjectAncestor    | Inject a node that is a parent, a grand-parent, or further from the current node |
+| InjectParentSibling |       Inject a node that has the same parent as the current node's parent        |
+|  InjectDescendant   |                    Inject a node that is a below in the tree                     |
 
 ### Collections
 

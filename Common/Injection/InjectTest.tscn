@@ -14,17 +14,29 @@ _siblingField = NodePath("../Sibling")
 _parentField = NodePath("..")
 _ancestorField = NodePath("../..")
 _parentSiblingField = NodePath("../../ParentSibling")
-_injectTestChildField = NodePath("Node")
+_injectTestChildField = NodePath("N7")
 ChildProperty = NodePath("Child")
 SiblingProperty = NodePath("../Sibling")
 ParentProperty = NodePath("..")
 AncestorProperty = NodePath("../..")
 ParentSiblingProperty = NodePath("../../ParentSibling")
-InjectTestChildProperty = NodePath("Node")
+InjectTestChildProperty = NodePath("N7")
 
 [node name="Child" type="CSGBox3D" parent="CloseParent/Self"]
 
-[node name="Node" type="Node" parent="CloseParent/Self"]
+[node name="N1" type="Node" parent="CloseParent/Self/Child"]
+
+[node name="N2" type="Node" parent="CloseParent/Self/Child/N1"]
+
+[node name="N3" type="Node" parent="CloseParent/Self/Child/N1/N2"]
+
+[node name="N4" type="Node" parent="CloseParent/Self/Child/N1/N2/N3"]
+
+[node name="N5" type="Node" parent="CloseParent/Self/Child/N1/N2"]
+
+[node name="N6" type="Node" parent="CloseParent/Self/Child"]
+
+[node name="N7" type="Node" parent="CloseParent/Self"]
 script = ExtResource("2_77h0y")
 
 [node name="Sibling" type="Control" parent="CloseParent"]
