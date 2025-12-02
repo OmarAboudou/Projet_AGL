@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://cabaxdwkysgff"]
+
+[ext_resource type="Script" uid="uid://b4wq6qkfext7k" path="res://src/App.cs" id="1_rh4ot"]
+[ext_resource type="PackedScene" uid="uid://4hps2aqgshds" path="res://src/Menu/Menu.tscn" id="2_fxm7c"]
+
+[node name="App" type="Node"]
+script = ExtResource("1_rh4ot")
+_initialScene = ExtResource("2_fxm7c")

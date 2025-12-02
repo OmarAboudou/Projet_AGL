@@ -16,11 +16,15 @@ config/features=PackedStringArray("4.5", "C#", "Mobile")
 
 [autoload]
 
-InjectAttributeHandler="*res://Common/Composition System/InjectAttributeHandler.cs"
+InjectAttributeHandler="*res://Common/Injection/InjectAttributeHandler.cs"
 
 [dotnet]
 
 project/assembly_name="Project_AGL"
+
+[editor]
+
+naming/scene_name_casing=1
 
 [file_customization]
 
@@ -33,4 +37,3 @@ folder_colors={
 [rendering]
 
 renderer/rendering_method="mobile"
-environment/defaults/default_clear_color=Color(0, 0, 0, 1)

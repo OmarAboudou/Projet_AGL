@@ -14,10 +14,10 @@ where T : class
         LogSystem.SetLogEnabled<TypeSafePackedSceneHolder<T>>(LogType.WARNING, true);
     }
     
-    public static implicit operator PackedScene(TypeSafePackedSceneHolder<T> typedSceneHolder)
+    /*public static implicit operator PackedScene(TypeSafePackedSceneHolder<T> typedSceneHolder)
     {
         return typedSceneHolder.Scene;
-    }
+    }*/
     
     [Export]
     public PackedScene Scene
