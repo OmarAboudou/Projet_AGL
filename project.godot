@@ -30,8 +30,8 @@ naming/scene_name_casing=1
 
 folder_colors={
 "res://Common/": "pink",
-"res://Tests/": "teal",
-"res://src/": "blue"
+"res://src/": "blue",
+"res://tests/": "teal"
 }
 
 [rendering]

@@ -9,6 +9,7 @@
     <Content Include="Client\Client.tscn" />
     <Content Include="Client\Server_Discovery\ServerDiscoveryRequester.cs.uid" />
     <Content Include="Common\.gitkeep" />
+    <Content Include="Common\Injection\Inject Attributes\InjectDescendantAttribute.cs.uid" />
     <Content Include="Common\Log System\LogSystem.cs.uid" />
     <Content Include="Common\Log System\LogType.cs.uid" />
 <Content Include="Common\README.md" />
@@ -19,5 +20,8 @@
     <Content Include="src\Main Menu\MenuData.cs.uid" />
     <Content Include="src\Scene Transition System\SceneTransitionSystem.cs.uid" />
     <Content Include="src\Scene Transition System\TransitionScreen.cs.uid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\Menu\" />
   </ItemGroup>
 </Project>
