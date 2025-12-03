@@ -17,6 +17,7 @@
     <Content Include="src\Scene Transition System\TransitionScreen.cs.uid" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\Menu System\" />
     <Folder Include="src\Menu\" />
   </ItemGroup>
 </Project>
