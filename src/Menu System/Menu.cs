@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Common.Utils;
 using Godot;
 
 namespace Menu_System;
@@ -60,13 +59,11 @@ public partial class Menu : Control
 
     private void EnableMenuPanel(MenuPanel menuPanel)
     {
-        menuPanel.SetAllProcessing(true);
         menuPanel.RequestNewPanel += this.CurrentMenuPanelOnRequestNewPanel;
     }
 
     private void DisableMenuPanel(MenuPanel menuPanel)
     {
-        menuPanel.SetAllProcessing(false);
         menuPanel.RequestNewPanel -= this.CurrentMenuPanelOnRequestNewPanel;
     }
     
