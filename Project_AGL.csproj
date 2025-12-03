@@ -8,11 +8,6 @@
   <ItemGroup>
     <Content Include="Client\Client.tscn" />
     <Content Include="Client\Server_Discovery\ServerDiscoveryRequester.cs.uid" />
-    <Content Include="Common\.gitkeep" />
-    <Content Include="Common\Injection\Inject Attributes\InjectDescendantAttribute.cs.uid" />
-    <Content Include="Common\Log System\LogSystem.cs.uid" />
-    <Content Include="Common\Log System\LogType.cs.uid" />
-<Content Include="Common\README.md" />
     <Content Include="Server\Server.tscn" />
     <Content Include="Server\Server_Discovery\.gitkeep" />
     <Content Include="Server\Server_Discovery\ServerDiscoveryResponder.cs.uid" />
