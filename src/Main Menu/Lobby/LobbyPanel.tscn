@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0odefopeta50"]
+
+[ext_resource type="Script" uid="uid://d0iir1dhu4e00" path="res://src/Main Menu/Lobby/LobbyPanel.cs" id="1_q0ypw"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q0ypw"]
+properties/0/path = NodePath("Label:text")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="LobbyPanel" type="PanelContainer" node_paths=PackedStringArray("_label")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q0ypw")
+_label = NodePath("Label")
+metadata/_custom_type_script = "uid://d0iir1dhu4e00"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "LOBBY PANEL"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_q0ypw")

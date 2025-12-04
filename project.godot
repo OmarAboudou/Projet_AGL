@@ -14,10 +14,6 @@ config/name="Project_AGL"
 run/main_scene="uid://xbm0xdushkp"
 config/features=PackedStringArray("4.5", "C#", "Mobile")
 
-[autoload]
-
-InjectAttributeHandler="*res://Common/Injection/InjectAttributeHandler.cs"
-
 [dotnet]
 
 project/assembly_name="Project_AGL"

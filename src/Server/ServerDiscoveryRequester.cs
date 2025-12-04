@@ -14,25 +14,25 @@ using static ServerConstants;
 /// <summary>
 /// The role of this class is to send discovery requests and raise a signal when a server is discovered
 /// </summary>
-public partial class ServerDiscoveryRequester : Node
+public static class ServerDiscoveryRequester
 {
-    [Signal]
-    public delegate void ServerDiscoveredEventHandler(string ipAddress, int port);
+    public delegate void ServerDiscovered(string ip, int port);
+    public static event ServerDiscovered OnServerDiscovered;
     
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private static readonly CancellationTokenSource _cancellationTokenSource = new();
     
-    public async void SearchServer()
+    public static async void SearchServer()
     {
         try
         {
-            CancellationToken cancellationToken = this._cancellationTokenSource.Token;
+            CancellationToken cancellationToken = _cancellationTokenSource.Token;
             using UdpClient client = new();
             client.EnableBroadcast = true;
             IPEndPoint endPoint = new(IPAddress.Broadcast, SERVER_PORT);
             byte[] data = Encoding.ASCII.GetBytes(DISCOVERY_MESSAGE);
             GD.Print("Client send discovery request");
             await client.SendAsync(data, endPoint, cancellationToken);
-            await this.ListenForResponses(cancellationToken, client);
+            await ListenForResponses(cancellationToken, client);
         }
         catch (OperationCanceledException)
         {
@@ -44,7 +44,7 @@ public partial class ServerDiscoveryRequester : Node
         }
     }
 
-    private async Task ListenForResponses(CancellationToken cancellationToken, UdpClient client)
+    private static async Task ListenForResponses(CancellationToken cancellationToken, UdpClient client)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -58,7 +58,7 @@ public partial class ServerDiscoveryRequester : Node
                 responseDictionary.ContainsKey("port"))
             {
                 GD.Print($"Client received discovery response {Json.Stringify(responseDictionary)}");
-                this.EmitSignalServerDiscovered(
+                OnServerDiscovered?.Invoke(
                     responseDictionary["ip"].AsString(),
                     responseDictionary["port"].AsInt32()
                 );
@@ -66,8 +66,8 @@ public partial class ServerDiscoveryRequester : Node
         }
     }
 
-    public void StopSearchingServer()
+    public static void StopSearchingServer()
     {
-        this._cancellationTokenSource.CancelAsync();
+        _cancellationTokenSource.CancelAsync();
     }
 }

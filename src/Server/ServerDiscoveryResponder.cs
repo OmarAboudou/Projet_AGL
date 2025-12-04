@@ -9,18 +9,16 @@ namespace Server;
 
 using static ServerConstants;
 
-/// <summary>
-/// The role of this class is to listen for server requests
-/// </summary>
-public partial class ServerDiscoveryResponder : Node
+public static class ServerDiscoveryResponder
 {
-    private CancellationTokenSource _cancellationTokenSource = new();
+    private static CancellationTokenSource _cancellationTokenSource = new();
 
-    public async Task StartRespondingDiscoveryRequests(string ipAddress, int port)
+    public static async Task StartRespondingDiscoveryRequests(int port)
     {
         try
         {
-            CancellationToken cancellationToken = this._cancellationTokenSource.Token;
+            string ipAddress = IP.GetLocalAddresses()[0];
+            CancellationToken cancellationToken = _cancellationTokenSource.Token;
             using UdpClient server = new(SERVER_PORT);
             Dictionary responseDictionary = new()
             {
@@ -44,15 +42,15 @@ public partial class ServerDiscoveryResponder : Node
         {
             GD.Print("Server response stopped");
         }
-        catch (Exception e)
+        /*catch (Exception e)
         {
             GD.PrintErr(e);
-        }
+        }*/
         
     }
 
-    public void StopRespondingDiscoveryRequests()
+    public static void StopRespondingDiscoveryRequests()
     {
-        this._cancellationTokenSource.CancelAsync();
+        _cancellationTokenSource.CancelAsync();
     }
 }

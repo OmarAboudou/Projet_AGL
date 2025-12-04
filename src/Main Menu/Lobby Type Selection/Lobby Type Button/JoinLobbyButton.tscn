@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://chm8fis8gdf5a"]
+
+[ext_resource type="PackedScene" uid="uid://gu546i6dv82q" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/LobbyTypeButton.tscn" id="1_niely"]
+[ext_resource type="Script" uid="uid://7iforto2kk7v" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/Strategy/JoinLobbyStrategy.cs" id="2_l702u"]
+
+[node name="JoinLobbyButton" node_paths=PackedStringArray("_strategy") instance=ExtResource("1_niely")]
+_strategy = NodePath("JoinLobbyStrategy")
+
+[node name="Button" parent="." index="0"]
+text = "JOIN LOBBY"
+
+[node name="JoinLobbyStrategy" type="Node" parent="." index="1"]
+script = ExtResource("2_l702u")
+metadata/_custom_type_script = "uid://7iforto2kk7v"
