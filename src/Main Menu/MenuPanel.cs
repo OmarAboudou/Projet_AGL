@@ -3,8 +3,10 @@ using Godot;
 namespace Main_Menu;
 
 [GlobalClass]
-public partial class MenuPanel : PanelContainer
+public abstract partial class MenuPanel : PanelContainer
 {
+    public virtual void OnGoBack() { }
+    
     [Signal]
     public delegate void RequestGoBackEventHandler();
     

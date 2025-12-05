@@ -31,21 +31,14 @@ public static class ServerDiscoveryResponder
                 string response = result.Buffer.GetStringFromUtf8();
                 if (response == DISCOVERY_MESSAGE)
                 {
-                    GD.Print("Server received discovery request");
                     byte[] responseData = Json.Stringify(responseDictionary).ToUtf8Buffer();
-                    GD.Print($"Server send discovery response {ipAddress}:{port}");
                     await server.SendAsync(responseData, result.RemoteEndPoint, cancellationToken);
                 }
             }
         }
         catch (OperationCanceledException)
         {
-            GD.Print("Server response stopped");
         }
-        /*catch (Exception e)
-        {
-            GD.PrintErr(e);
-        }*/
         
     }
 

@@ -2,23 +2,23 @@ using System;
 using Godot;
 using Server;
 
-namespace Main_Menu.Lobby_Type_Selection.Lobby_Type_Button.Strategy;
+namespace Main_Menu.Lobby_Type_Selection.Lobby_Type_Button;
 
 [GlobalClass]
-public partial class JoinLobbyStrategy : LobbyTypeButtonStrategy
+public partial class JoinLobbyButton : LobbyTypeButton
 {
     private bool _isSearching;
     private double _serverDiscoveryTimeoutInSec = 5;
     private SceneTreeTimer _serverDiscoveryTimer;
     
-    public override void Execute()
+    protected override void OnPressed()
     {
         ServerDiscoveryRequester.OnServerDiscovered += ServerDiscoveryRequesterOnOnServerDiscovered;
         ServerDiscoveryRequester.SearchServer();
         this._serverDiscoveryTimer = this.GetTree().CreateTimer(_serverDiscoveryTimeoutInSec);
         this._serverDiscoveryTimer.Timeout += this.OnTimeout;
     }
-
+    
     private void OnTimeout()
     {
         ServerDiscoveryRequester.StopSearchingServer();
@@ -29,7 +29,6 @@ public partial class JoinLobbyStrategy : LobbyTypeButtonStrategy
     {
         this._serverDiscoveryTimer.Timeout -= this.OnTimeout;
         this._serverDiscoveryTimer.SetTimeLeft(0);
-
         ENetMultiplayerPeer peer = new();
         Error error = peer.CreateClient(ip, port);
         if (error != Error.Ok)
@@ -37,6 +36,8 @@ public partial class JoinLobbyStrategy : LobbyTypeButtonStrategy
             throw new Exception(error.ToString());
         }
         GD.Print($"Successfully connected to {ip}:{port}");
-        this.Multiplayer.MultiplayerPeer = peer;
+        this.GetTree().GetMultiplayer().MultiplayerPeer = peer;
+        MenuPanel menuPanel = this.LobbyPanelScene.Instantiate<MenuPanel>();
+        this.EmitSignalRequestNewPanel(menuPanel);
     }
 }

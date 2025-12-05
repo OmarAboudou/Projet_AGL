@@ -20,10 +20,15 @@ public partial class MainMenu : PanelContainer
         this._menuGoBackButton.Pressed += this.TryGoBack;
     }
     
+    [
+        Rpc
+        (
+            CallLocal = true, 
+            TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+        )
+    ]
     private void AddNewPanel(MenuPanel newPanel)
     {
-        if(!this.IsMultiplayerAuthority()) return;
-        
         if (this._menuPanelStack.TryPeek(out MenuPanel currentPanel))
         {
             currentPanel.RequestNewPanel -= this.AddNewPanel;
@@ -32,6 +37,7 @@ public partial class MainMenu : PanelContainer
         }
         _menuPanelStack.Push(newPanel);
         _menuPanelContainer.AddChild(newPanel);
+        newPanel.Show();
         newPanel.RequestNewPanel += this.AddNewPanel;
         newPanel.RequestGoBack += this.TryGoBack;
         
@@ -54,6 +60,7 @@ public partial class MainMenu : PanelContainer
     private void GoBack()
     {
         MenuPanel currentPanel = this._menuPanelStack.Pop();
+        currentPanel.OnGoBack();
         currentPanel.QueueFree();
         
         MenuPanel newCurrentPanel = this._menuPanelStack.Peek();

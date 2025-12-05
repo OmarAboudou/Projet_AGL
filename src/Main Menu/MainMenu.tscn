@@ -41,7 +41,3 @@ flat = true
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 9.0
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="VBoxContainer/MenuPanelContainer"]
-_spawnable_scenes = PackedStringArray("uid://xahwv8sokpqi", "uid://c0odefopeta50")
-spawn_path = NodePath("..")

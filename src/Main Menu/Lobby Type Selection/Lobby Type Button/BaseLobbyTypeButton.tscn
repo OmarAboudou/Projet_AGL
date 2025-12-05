@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://gu546i6dv82q"]
+
+[node name="LobbyTypeButton" type="PanelContainer"]
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+text = "{BUTTON TEXT}"

@@ -1,14 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://b6pgpwy1xs2o8"]
+[gd_scene load_steps=4 format=3 uid="uid://b6pgpwy1xs2o8"]
 
-[ext_resource type="PackedScene" uid="uid://gu546i6dv82q" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/LobbyTypeButton.tscn" id="1_quqvk"]
-[ext_resource type="Script" uid="uid://cddua1j2xju80" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/Strategy/HostLobbyStrategy.cs" id="2_rxl2b"]
+[ext_resource type="PackedScene" uid="uid://gu546i6dv82q" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/BaseLobbyTypeButton.tscn" id="1_quqvk"]
+[ext_resource type="Script" uid="uid://dvtsn3f5k27f5" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/HostLobbyButton.cs" id="2_quqvk"]
+[ext_resource type="PackedScene" uid="uid://c0odefopeta50" path="res://src/Main Menu/Lobby/LobbyPanel.tscn" id="3_rxl2b"]
 
-[node name="HostLobbyButton" node_paths=PackedStringArray("_strategy") instance=ExtResource("1_quqvk")]
-_strategy = NodePath("HostLobbyStrategy")
+[node name="HostLobbyButton" node_paths=PackedStringArray("_innerButton") instance=ExtResource("1_quqvk")]
+script = ExtResource("2_quqvk")
+_innerButton = NodePath("Button")
+LobbyPanelScene = ExtResource("3_rxl2b")
 
 [node name="Button" parent="." index="0"]
 text = "HOST LOBBY"
 
 [node name="HostLobbyStrategy" type="Node" parent="." index="1"]
-script = ExtResource("2_rxl2b")
 metadata/_custom_type_script = "uid://cddua1j2xju80"

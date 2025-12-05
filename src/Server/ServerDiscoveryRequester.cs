@@ -30,13 +30,11 @@ public static class ServerDiscoveryRequester
             client.EnableBroadcast = true;
             IPEndPoint endPoint = new(IPAddress.Broadcast, SERVER_PORT);
             byte[] data = Encoding.ASCII.GetBytes(DISCOVERY_MESSAGE);
-            GD.Print("Client send discovery request");
             await client.SendAsync(data, endPoint, cancellationToken);
             await ListenForResponses(cancellationToken, client);
         }
         catch (OperationCanceledException)
         {
-            GD.Print("Server discovery stopped");
         }
         catch (Exception e)
         {
@@ -57,7 +55,6 @@ public static class ServerDiscoveryRequester
             if (responseDictionary != null && responseDictionary.ContainsKey("ip") &&
                 responseDictionary.ContainsKey("port"))
             {
-                GD.Print($"Client received discovery response {Json.Stringify(responseDictionary)}");
                 OnServerDiscovered?.Invoke(
                     responseDictionary["ip"].AsString(),
                     responseDictionary["port"].AsInt32()
