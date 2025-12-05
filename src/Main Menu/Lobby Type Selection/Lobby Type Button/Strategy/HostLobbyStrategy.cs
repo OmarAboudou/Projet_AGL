@@ -1,6 +1,5 @@
 using System;
 using Godot;
-using Main_Menu.Lobby;
 using Server;
 
 namespace Main_Menu.Lobby_Type_Selection.Lobby_Type_Button.Strategy;
@@ -14,7 +13,7 @@ public partial class HostLobbyStrategy : LobbyTypeButtonStrategy
     
     public override void Execute()
     {
-        LobbyPanel lobbyPanel = this._lobbyPanelScene.Instantiate<LobbyPanel>();
+        MenuPanel lobbyPanel = this._lobbyPanelScene.Instantiate<MenuPanel>();
         Error error = this._peer.CreateServer(_serverPort, 4);
         if (error != Error.Ok)
         {
@@ -22,7 +21,7 @@ public partial class HostLobbyStrategy : LobbyTypeButtonStrategy
         }
         this.Multiplayer.MultiplayerPeer = this._peer;
         ServerDiscoveryResponder.StartRespondingDiscoveryRequests(_serverPort);
-        this.EmitSignalLobbyTypeChosen(lobbyPanel);
+        this.EmitSignalRequestNewPanel(lobbyPanel);
     }
 
 }

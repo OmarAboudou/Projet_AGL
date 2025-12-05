@@ -5,6 +5,7 @@
 [node name="LobbyTypeButton" type="PanelContainer" node_paths=PackedStringArray("_innerButton")]
 script = ExtResource("1_j15qq")
 _innerButton = NodePath("Button")
+Text = "{BUTTON TEXT}"
 metadata/_custom_type_script = "uid://cag0tfnngk8nm"
 
 [node name="Button" type="Button" parent="."]

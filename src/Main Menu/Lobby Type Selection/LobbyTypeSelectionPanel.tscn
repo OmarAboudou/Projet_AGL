@@ -1,28 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://xahwv8sokpqi"]
+[gd_scene load_steps=5 format=3 uid="uid://xahwv8sokpqi"]
 
+[ext_resource type="PackedScene" uid="uid://tm2p8n5mrefy" path="res://src/Main Menu/BaseMenuPanel.tscn" id="1_4lamc"]
 [ext_resource type="Script" uid="uid://djwbpcmgjl7go" path="res://src/Main Menu/Lobby Type Selection/LobbyTypeSelectionPanel.cs" id="1_an614"]
-[ext_resource type="PackedScene" uid="uid://chm8fis8gdf5a" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/JoinLobbyButton.tscn" id="2_4lamc"]
-[ext_resource type="PackedScene" uid="uid://b6pgpwy1xs2o8" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/HostLobbyButton.tscn" id="3_lj2xk"]
+[ext_resource type="PackedScene" uid="uid://chm8fis8gdf5a" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/JoinLobbyButton.tscn" id="4_lj2xk"]
+[ext_resource type="PackedScene" uid="uid://b6pgpwy1xs2o8" path="res://src/Main Menu/Lobby Type Selection/Lobby Type Button/HostLobbyButton.tscn" id="5_x5g8h"]
 
-[node name="LobbyTypeSelectionPanel" type="PanelContainer" node_paths=PackedStringArray("_lobbyTypeButtons")]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="LobbyTypeSelectionPanel" node_paths=PackedStringArray("_lobbyTypeButtons") instance=ExtResource("1_4lamc")]
 script = ExtResource("1_an614")
 _lobbyTypeButtons = [NodePath("VBoxContainer/JoinLobbyButton"), NodePath("VBoxContainer/HostLobbyButton")]
-metadata/_custom_type_script = "uid://djwbpcmgjl7go"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="0"]
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
 
-[node name="JoinLobbyButton" parent="VBoxContainer" instance=ExtResource("2_4lamc")]
+[node name="JoinLobbyButton" parent="VBoxContainer" index="0" instance=ExtResource("4_lj2xk")]
 layout_mode = 2
 
-[node name="HostLobbyButton" parent="VBoxContainer" instance=ExtResource("3_lj2xk")]
+[node name="HostLobbyButton" parent="VBoxContainer" index="1" instance=ExtResource("5_x5g8h")]
 layout_mode = 2

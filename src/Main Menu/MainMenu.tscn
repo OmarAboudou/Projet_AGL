@@ -1,10 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://4hps2aqgshds"]
+[gd_scene load_steps=4 format=3 uid="uid://4hps2aqgshds"]
 
 [ext_resource type="Script" uid="uid://b8mx1dxoaq1o2" path="res://src/Main Menu/MainMenu.cs" id="1_xkv8w"]
 [ext_resource type="PackedScene" uid="uid://xahwv8sokpqi" path="res://src/Main Menu/Lobby Type Selection/LobbyTypeSelectionPanel.tscn" id="2_drck2"]
 [ext_resource type="Script" uid="uid://bncoh16qhpc68" path="res://src/Main Menu/MenuGoBackButton.cs" id="2_mmgkr"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_drck2"]
 
 [node name="MainMenu" type="PanelContainer" node_paths=PackedStringArray("_menuPanelContainer", "_menuGoBackButton")]
 anchors_preset = 15
@@ -44,5 +42,6 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 9.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_drck2")
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="VBoxContainer/MenuPanelContainer"]
+_spawnable_scenes = PackedStringArray("uid://xahwv8sokpqi", "uid://c0odefopeta50")
+spawn_path = NodePath("..")

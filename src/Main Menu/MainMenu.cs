@@ -10,36 +10,53 @@ public partial class MainMenu : PanelContainer
     [Export] private MenuGoBackButton _menuGoBackButton;
     [Export] private PackedScene _initialMenuPanelScene;
     
-    private Stack<MainMenuPanel> _menuPanelStack = new();
+    private readonly Stack<MenuPanel> _menuPanelStack = new();
 
     public override void _Ready()
     {
         base._Ready();
         this.UpdateGoBackButtonState();
-        this.AddNewPanel(this._initialMenuPanelScene.Instantiate<MainMenuPanel>());
-        this._menuGoBackButton.Pressed += this.MenuGoBack;
+        this.AddNewPanel(this._initialMenuPanelScene.Instantiate<MenuPanel>());
+        this._menuGoBackButton.Pressed += this.TryGoBack;
     }
-
-    private void AddNewPanel(MainMenuPanel newPanel)
+    
+    private void AddNewPanel(MenuPanel newPanel)
     {
-        if (this._menuPanelStack.TryPeek(out MainMenuPanel currentPanel))
+        if(!this.IsMultiplayerAuthority()) return;
+        
+        if (this._menuPanelStack.TryPeek(out MenuPanel currentPanel))
         {
             currentPanel.RequestNewPanel -= this.AddNewPanel;
+            currentPanel.RequestGoBack -= this.TryGoBack;
             currentPanel.Hide();
         }
         _menuPanelStack.Push(newPanel);
         _menuPanelContainer.AddChild(newPanel);
         newPanel.RequestNewPanel += this.AddNewPanel;
+        newPanel.RequestGoBack += this.TryGoBack;
         
         this.UpdateGoBackButtonState();
     }
 
-    private void MenuGoBack()
+    private void TryGoBack()
     {
-        MainMenuPanel currentPanel = this._menuPanelStack.Pop();
+        if (this.CanGoBack())
+        {
+            this.GoBack();
+        }
+    }
+
+    private bool CanGoBack()
+    {
+        return this._menuPanelStack.Count > 1;
+    }
+
+    private void GoBack()
+    {
+        MenuPanel currentPanel = this._menuPanelStack.Pop();
         currentPanel.QueueFree();
         
-        MainMenuPanel newCurrentPanel = this._menuPanelStack.Peek();
+        MenuPanel newCurrentPanel = this._menuPanelStack.Peek();
         newCurrentPanel.Show();
         
         this.UpdateGoBackButtonState();

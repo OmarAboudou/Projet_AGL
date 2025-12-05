@@ -1,5 +1,4 @@
 using Godot;
-using Main_Menu.Lobby;
 
 namespace Main_Menu.Lobby_Type_Selection.Lobby_Type_Button.Strategy;
 
@@ -9,5 +8,5 @@ public abstract partial class LobbyTypeButtonStrategy : Node
     public abstract void Execute();
     
     [Signal]
-    public delegate void LobbyTypeChosenEventHandler(LobbyPanel lobbyPanel);
+    public delegate void RequestNewPanelEventHandler(MenuPanel lobbyPanel);
 }
