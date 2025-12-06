@@ -3,7 +3,7 @@ using Godot;
 namespace Main_Menu;
 
 [GlobalClass]
-public partial class MenuGoBackButton : PanelContainer
+public partial class MenuGoBackButton : MarginContainer
 {
     [Export] private BaseButton _innerButton;
     

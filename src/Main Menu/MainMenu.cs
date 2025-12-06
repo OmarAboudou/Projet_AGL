@@ -4,7 +4,7 @@ using Godot;
 namespace Main_Menu;
 
 [GlobalClass]
-public partial class MainMenu : PanelContainer
+public partial class MainMenu : MarginContainer
 {
     [Export] private Control _menuPanelContainer;
     [Export] private MenuGoBackButton _menuGoBackButton;

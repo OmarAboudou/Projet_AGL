@@ -3,7 +3,7 @@ using Godot;
 namespace Main_Menu;
 
 [GlobalClass]
-public abstract partial class MenuPanel : PanelContainer
+public abstract partial class MenuPanel : MarginContainer
 {
     public virtual void OnGoBack() { }
     

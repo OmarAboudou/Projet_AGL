@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://4hps2aqgshds"]
+[gd_scene load_steps=3 format=3 uid="uid://4hps2aqgshds"]
 
 [ext_resource type="Script" uid="uid://b8mx1dxoaq1o2" path="res://src/Main Menu/MainMenu.cs" id="1_xkv8w"]
-[ext_resource type="PackedScene" uid="uid://xahwv8sokpqi" path="res://src/Main Menu/Lobby Type Selection/LobbyTypeSelectionPanel.tscn" id="2_drck2"]
 [ext_resource type="Script" uid="uid://bncoh16qhpc68" path="res://src/Main Menu/MenuGoBackButton.cs" id="2_mmgkr"]
 
 [node name="MainMenu" type="PanelContainer" node_paths=PackedStringArray("_menuPanelContainer", "_menuGoBackButton")]
@@ -15,7 +14,6 @@ size_flags_vertical = 3
 script = ExtResource("1_xkv8w")
 _menuPanelContainer = NodePath("VBoxContainer/MenuPanelContainer")
 _menuGoBackButton = NodePath("VBoxContainer/TopBar/GoBackButton")
-_initialMenuPanelScene = ExtResource("2_drck2")
 metadata/_custom_type_script = "uid://b8mx1dxoaq1o2"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
