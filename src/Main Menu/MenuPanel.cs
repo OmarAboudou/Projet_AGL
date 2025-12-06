@@ -3,13 +3,14 @@ using Godot;
 namespace Main_Menu;
 
 [GlobalClass]
-public abstract partial class MenuPanel : MarginContainer
+public partial class MenuPanel : Control
 {
-    public virtual void OnGoBack() { }
+    [Signal]
+    public delegate void AddNewMenuPanelEventHandler(MenuPanel newMenuPanel);
     
     [Signal]
-    public delegate void RequestGoBackEventHandler();
+    public delegate void GoBackToPreviousMenuPanelEventHandler();
     
     [Signal]
-    public delegate void RequestNewPanelEventHandler(MenuPanel newPanel);
+    public delegate void GoBackToFirstMenuPanelEventHandler();
 }

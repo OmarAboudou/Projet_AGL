@@ -1,7 +1,62 @@
-[gd_scene load_steps=2 format=3 uid="uid://xbm0xdushkp"]
+[gd_scene load_steps=4 format=3 uid="uid://xbm0xdushkp"]
 
-[ext_resource type="PackedScene" uid="uid://4hps2aqgshds" path="res://src/Main Menu/MainMenu.tscn" id="1_rh4ot"]
+[ext_resource type="Script" uid="uid://efh523if7yh2" path="res://src/Main Menu/Menu.cs" id="1_rh4ot"]
+[ext_resource type="Script" uid="uid://dtwi5vptti85o" path="res://src/Main Menu/MenuPanelManager.cs" id="2_fxm7c"]
+[ext_resource type="PackedScene" uid="uid://bsj25iboqut2f" path="res://src/LobbyTypeSelectionPanel.tscn" id="3_mjtu0"]
 
 [node name="App" type="Node"]
 
-[node name="MainMenu" parent="." instance=ExtResource("1_rh4ot")]
+[node name="Menu" type="Control" parent="." node_paths=PackedStringArray("_goBackButton", "_menuPanelManager")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_rh4ot")
+_goBackButton = NodePath("VBoxContainer/TopBar/Button")
+_menuPanelManager = NodePath("VBoxContainer/MenuPanelManager")
+metadata/_custom_type_script = "uid://efh523if7yh2"
+
+[node name="Backgroud" type="Panel" parent="Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 9.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="TopBar" type="Control" parent="Menu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="Menu/VBoxContainer/TopBar"]
+layout_mode = 0
+offset_right = 50.0
+offset_bottom = 64.0
+text = "BACK"
+
+[node name="MenuPanelManager" type="Control" parent="Menu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 9.0
+script = ExtResource("2_fxm7c")
+_startMenuPanel = ExtResource("3_mjtu0")
+metadata/_custom_type_script = "uid://dtwi5vptti85o"
+
+[node name="BodyBackground" type="Panel" parent="Menu/VBoxContainer/MenuPanelManager"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
