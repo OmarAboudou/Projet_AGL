@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=3 uid="uid://cl8vpjxnvutqi"]
+
+[ext_resource type="Script" uid="uid://efh523if7yh2" path="res://src/Main Menu/Menu.cs" id="1_2rjey"]
+[ext_resource type="Script" uid="uid://dtwi5vptti85o" path="res://src/Main Menu/MenuPanelManager.cs" id="2_gc7qr"]
+[ext_resource type="PackedScene" uid="uid://bsj25iboqut2f" path="res://src/Main Menu/Lobby Type Selection/LobbyTypeSelectionPanel.tscn" id="3_nmec7"]
+
+[node name="Menu" type="Control" node_paths=PackedStringArray("_goBackButton", "_menuPanelManager")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_2rjey")
+_goBackButton = NodePath("VBoxContainer/TopBar/GoBackButton")
+_menuPanelManager = NodePath("VBoxContainer/MenuPanelManager")
+metadata/_custom_type_script = "uid://efh523if7yh2"
+
+[node name="Backgroud" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 9.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="TopBar" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GoBackButton" type="Button" parent="VBoxContainer/TopBar"]
+layout_mode = 0
+offset_right = 50.0
+offset_bottom = 64.0
+text = "BACK"
+
+[node name="MenuPanelManager" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 9.0
+script = ExtResource("2_gc7qr")
+_startMenuPanel = ExtResource("3_nmec7")
+metadata/_custom_type_script = "uid://dtwi5vptti85o"
+
+[node name="BodyBackground" type="Panel" parent="VBoxContainer/MenuPanelManager"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
