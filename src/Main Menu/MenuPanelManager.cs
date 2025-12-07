@@ -26,12 +26,11 @@ public partial class MenuPanelManager : Control
         MenuPanel currentMenuPanel = GetChildOrNull<MenuPanel>(-1);
         if (currentMenuPanel != null)
         {
-            this.DisconnectFromMenuPanel(currentMenuPanel);
-            currentMenuPanel.Hide();
+            this.DeactivateMenuPanel(currentMenuPanel);
         }
-        this.ConnectToMenuPanel(newMenuPanel);
+        this.ActivateMenuPanel(newMenuPanel);
         this.AddChild(newMenuPanel);
-        newMenuPanel.Show();
+        this.EmitSignalNewMenuPanelAdded(newMenuPanel);
     }
 
     public void GoBackToPreviousMenuPanel()
@@ -40,11 +39,13 @@ public partial class MenuPanelManager : Control
         if (currentPanels.Length > 1)
         {
             MenuPanel currentPanel = currentPanels[^1];
-            this.DisconnectFromMenuPanel(currentPanel);
+            currentPanel.OnGoBackFrom();
+            this.DeactivateMenuPanel(currentPanel);
             currentPanel.QueueFree();
         }
         MenuPanel newCurrentPanel = currentPanels[^2];
-        this.ConnectToMenuPanel(newCurrentPanel);
+        this.ActivateMenuPanel(newCurrentPanel);
+        this.EmitSignalWentBackToPreviousMenuPanel();
     }
 
     public void GoBackToFirstMenuPanel()
@@ -61,17 +62,19 @@ public partial class MenuPanelManager : Control
          return this.GetChildren().OfType<MenuPanel>().Count() > 1;
     }
 
-    private void ConnectToMenuPanel(MenuPanel menuPanel)
+    private void ActivateMenuPanel(MenuPanel menuPanel)
     {
         menuPanel.AddNewMenuPanel += this.AddNewMenuPanel;
         menuPanel.GoBackToPreviousMenuPanel += this.GoBackToPreviousMenuPanel;
         menuPanel.GoBackToFirstMenuPanel += this.GoBackToFirstMenuPanel;
+        menuPanel.Show();
     }
 
-    private void DisconnectFromMenuPanel(MenuPanel menuPanel)
+    private void DeactivateMenuPanel(MenuPanel menuPanel)
     {
         menuPanel.AddNewMenuPanel -= this.AddNewMenuPanel;
         menuPanel.GoBackToPreviousMenuPanel -= this.GoBackToPreviousMenuPanel;
         menuPanel.GoBackToFirstMenuPanel -= this.GoBackToFirstMenuPanel;
+        menuPanel.Hide();
     }
 }

@@ -11,7 +11,7 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
     [Export] private Button _joinButton;
     [Export] private Button _hostButton;
     [Export] private PackedScene _lobbyPanelScene;
-    private bool isSearching = false;
+    private bool _isSearching;
 
     public override void _Ready()
     {
@@ -22,7 +22,7 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
 
     private void JoinButtonOnPressed()
     {
-        if(isSearching) return;
+        if(this._isSearching) return;
         
         LobbyPanel lobbyPanel = this._lobbyPanelScene.Instantiate<LobbyPanel>();
         float timeoutTime = 3f;
@@ -37,7 +37,7 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
             ServerDiscoveryRequester.OnServerDiscovered -= ServerDiscoveryRequesterOnOnServerDiscovered;
             timer.Timeout -= TimerOnTimeout;
             timer.TimeLeft = 0;
-            this.isSearching = false;
+            this._isSearching = false;
             lobbyPanel.QueueFree();
             GD.PrintErr($"Couldn't find a server in {timeoutTime} seconds.");
         }
@@ -49,7 +49,7 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
             ServerDiscoveryRequester.OnServerDiscovered -= ServerDiscoveryRequesterOnOnServerDiscovered;
             timer.Timeout -= TimerOnTimeout;
             timer.TimeLeft = 0;
-            this.isSearching = false;
+            this._isSearching = false;
             
             ENetMultiplayerPeer clientPeer = new();
             Error error = clientPeer.CreateClient(ip, port);
@@ -73,12 +73,6 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
             throw new Exception(error.ToString());
         }
         Multiplayer.MultiplayerPeer = serverPeer;
-        lobbyPanel.Ready += LobbyPanelOnReady;
-        void LobbyPanelOnReady()
-        {
-            lobbyPanel.Ready -= LobbyPanelOnReady;
-            lobbyPanel.AddPeer(1);
-        }
         this.EmitSignalAddNewMenuPanel(lobbyPanel);
         ServerDiscoveryResponder.StartRespondingDiscoveryRequests(port);
     }

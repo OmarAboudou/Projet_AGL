@@ -23,16 +23,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PlayerSlotsManager" type="Control" parent="VBoxContainer" node_paths=PackedStringArray("_playerSlots")]
+[node name="PlayerSlotsManager" type="Control" parent="VBoxContainer" node_paths=PackedStringArray("_playerSlotsContainer")]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("2_d5lak")
-_playerSlots = [NodePath("HBoxContainer/PlayerSlot1"), NodePath("HBoxContainer/PlayerSlot2"), NodePath("HBoxContainer/PlayerSlot3"), NodePath("HBoxContainer/PlayerSlot4")]
+_playerSlotsContainer = NodePath("HBoxContainer")
 metadata/_custom_type_script = "uid://cootmrds10mhi"
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="VBoxContainer/PlayerSlotsManager"]
-_spawnable_scenes = PackedStringArray("uid://bb6nvh0uk7uaj")
-spawn_path = NodePath("../HBoxContainer")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PlayerSlotsManager"]
 layout_mode = 1

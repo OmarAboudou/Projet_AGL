@@ -17,35 +17,44 @@ public partial class PlayerSlot : Control
     public override void _Ready()
     {
         base._Ready();
+        this._playerNameLineEdit.SetText(this._defaultPlayerName);
         this.IsOccupied = false;
         this._emptySlotControl.Show();
         this._nonEmptySlotControl.Hide();
-        this._playerNameLineEdit.SetText(this._defaultPlayerName);
     }
 
-    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable, CallLocal = true)]
     public void SetPeer(int peerId)
     {
         this.SetMultiplayerAuthority(peerId);
-        this.IsOccupied = true;
-        this._emptySlotControl.Hide();
-        this._nonEmptySlotControl.Show();
+        this.ShowConnected();
         this.UpdateEditableState();
     }
 
     public void ClearPeer()
     {
         this.SetMultiplayerAuthority(1);
+        this.ShowEmpty();
+    }
+
+    private void ShowConnected()
+    {        
+        this.IsOccupied = true;
+        this._emptySlotControl.Hide();
+        this._nonEmptySlotControl.Show();
+    }
+
+    private void ShowEmpty()
+    {
         this.IsOccupied = false;
         this._emptySlotControl.Show();
-        this._nonEmptySlotControl.Hide();
-        this.UpdateEditableState();
+        this._nonEmptySlotControl.Hide();        
     }
 
     private void UpdateEditableState()
     {
         bool isAuthority = this.IsAuthority();
         this._playerNameLineEdit.Editable = isAuthority;
+        this._playerNameLineEdit.MouseFilter = isAuthority ? MouseFilterEnum.Stop : MouseFilterEnum.Ignore;
         this._readyButton.MouseFilter = isAuthority ? MouseFilterEnum.Stop : MouseFilterEnum.Ignore;
     }
 

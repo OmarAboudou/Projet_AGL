@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 
 namespace Main_Menu.Lobby;
@@ -7,33 +8,42 @@ public partial class LobbyPanel : MenuPanel
 {
     [Export] private PlayerSlotsManager _playerSlotsManager;
 
+    public override void OnGoBackFrom()
+    {
+        base.OnGoBackFrom();
+        Multiplayer.MultiplayerPeer.Close();
+        Multiplayer.MultiplayerPeer = null;
+    }
+
     public override void _Ready()
     {
         base._Ready();
         if (this.IsMultiplayerAuthority())
         {
-            Multiplayer.PeerConnected += MultiplayerOnPeerConnected;
-            Multiplayer.PeerDisconnected += MultiplayerOnPeerDisconnected;
+            Multiplayer.PeerConnected += this.ServerOnPeerConnected;
+            Multiplayer.PeerDisconnected += this.ServerOnPeerDisconnected;
+            this.ServerOnPeerConnected(1);
+        }
+        else
+        {
+            Multiplayer.ServerDisconnected += this.ClientOnServerDisconnected;
         }
     }
 
-    private void MultiplayerOnPeerConnected(long id)
+    private void ClientOnServerDisconnected()
     {
-        _playerSlotsManager.AddPeer((int)id);
-    }
-    
-    private void MultiplayerOnPeerDisconnected(long id)
-    {
-        _playerSlotsManager.RemovePeer((int)id);
+        this.EmitSignalGoBackToPreviousMenuPanel();
     }
 
-    public void AddPeer(long id)
+    private void ServerOnPeerConnected(long id)
     {
+        this._playerSlotsManager.UpdateAuthorities(this._playerSlotsManager.PlayerSlots.Select(p => p.GetMultiplayerAuthority()).ToArray());
         this._playerSlotsManager.AddPeer((int)id);
     }
 
-    private void RemovePeer(long id)
+    private void ServerOnPeerDisconnected(long id)
     {
+        this._playerSlotsManager.UpdateAuthorities(this._playerSlotsManager.PlayerSlots.Select(p => p.GetMultiplayerAuthority()).ToArray());
         this._playerSlotsManager.RemovePeer((int)id);
     }
 }
