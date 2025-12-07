@@ -1,0 +1,74 @@
+[gd_scene load_steps=3 format=3 uid="uid://bb6nvh0uk7uaj"]
+
+[ext_resource type="Script" uid="uid://dwg4j6kqkqsy4" path="res://src/Main Menu/Lobby/PlayerSlot.cs" id="1_x8p8g"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_x8p8g"]
+properties/0/path = NodePath("VBoxContainer/LineEdit:text")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("VBoxContainer/ReadyButton:button_pressed")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:IsOccupied")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath("Background:visible")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("VBoxContainer:visible")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[node name="PlayerSlot1" type="Control" node_paths=PackedStringArray("_emptySlotControl", "_nonEmptySlotControl", "_playerNameLineEdit", "_readyButton")]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+script = ExtResource("1_x8p8g")
+_emptySlotControl = NodePath("Background")
+_nonEmptySlotControl = NodePath("VBoxContainer")
+_playerNameLineEdit = NodePath("VBoxContainer/LineEdit")
+_readyButton = NodePath("VBoxContainer/ReadyButton")
+metadata/_custom_type_script = "uid://dwg4j6kqkqsy4"
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "EMPTY SLOT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "{PLAYER NAME}"
+alignment = 1
+
+[node name="ReadyButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "READY"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+delta_interval = 1.0
+replication_config = SubResource("SceneReplicationConfig_x8p8g")

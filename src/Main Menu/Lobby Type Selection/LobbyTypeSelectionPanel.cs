@@ -1,0 +1,85 @@
+using System;
+using Godot;
+using Main_Menu.Lobby;
+using Server;
+
+namespace Main_Menu.Lobby_Type_Selection;
+
+[GlobalClass]
+public partial class LobbyTypeSelectionPanel : MenuPanel
+{
+    [Export] private Button _joinButton;
+    [Export] private Button _hostButton;
+    [Export] private PackedScene _lobbyPanelScene;
+    private bool isSearching = false;
+
+    public override void _Ready()
+    {
+        base._Ready();
+        this._joinButton.Pressed += this.JoinButtonOnPressed;
+        this._hostButton.Pressed += this.HostButtonOnPressed;
+    }
+
+    private void JoinButtonOnPressed()
+    {
+        if(isSearching) return;
+        
+        LobbyPanel lobbyPanel = this._lobbyPanelScene.Instantiate<LobbyPanel>();
+        float timeoutTime = 3f;
+        SceneTreeTimer timer = this.GetTree().CreateTimer(timeoutTime);
+        ServerDiscoveryRequester.OnServerDiscovered += ServerDiscoveryRequesterOnOnServerDiscovered;
+        timer.Timeout += TimerOnTimeout;
+        ServerDiscoveryRequester.SearchServer();
+        
+        void TimerOnTimeout()
+        {
+            ServerDiscoveryRequester.StopSearchingServer();
+            ServerDiscoveryRequester.OnServerDiscovered -= ServerDiscoveryRequesterOnOnServerDiscovered;
+            timer.Timeout -= TimerOnTimeout;
+            timer.TimeLeft = 0;
+            this.isSearching = false;
+            lobbyPanel.QueueFree();
+            GD.PrintErr($"Couldn't find a server in {timeoutTime} seconds.");
+        }
+
+        void ServerDiscoveryRequesterOnOnServerDiscovered(string ip, int port)
+        {
+            
+            ServerDiscoveryRequester.StopSearchingServer();
+            ServerDiscoveryRequester.OnServerDiscovered -= ServerDiscoveryRequesterOnOnServerDiscovered;
+            timer.Timeout -= TimerOnTimeout;
+            timer.TimeLeft = 0;
+            this.isSearching = false;
+            
+            ENetMultiplayerPeer clientPeer = new();
+            Error error = clientPeer.CreateClient(ip, port);
+            if (error != Error.Ok)
+            {
+                throw new Exception(error.ToString());
+            }
+            Multiplayer.MultiplayerPeer = clientPeer;
+            this.EmitSignalAddNewMenuPanel(lobbyPanel);
+        }
+    }
+
+    private void HostButtonOnPressed()
+    {
+        LobbyPanel lobbyPanel = this._lobbyPanelScene.Instantiate<LobbyPanel>();
+        ENetMultiplayerPeer serverPeer = new();
+        int port = 8081;
+        Error error = serverPeer.CreateServer(port);
+        if (error != Error.Ok)
+        {
+            throw new Exception(error.ToString());
+        }
+        Multiplayer.MultiplayerPeer = serverPeer;
+        lobbyPanel.Ready += LobbyPanelOnReady;
+        void LobbyPanelOnReady()
+        {
+            lobbyPanel.Ready -= LobbyPanelOnReady;
+            lobbyPanel.AddPeer(1);
+        }
+        this.EmitSignalAddNewMenuPanel(lobbyPanel);
+        ServerDiscoveryResponder.StartRespondingDiscoveryRequests(port);
+    }
+}

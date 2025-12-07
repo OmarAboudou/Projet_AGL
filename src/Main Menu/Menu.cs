@@ -12,6 +12,30 @@ public partial class Menu : Control
     public override void _Ready()
     {
         base._Ready();
-        this._goBackButton.Pressed += this._menuPanelManager.GoBackToPreviousMenuPanel;
+        this._goBackButton.Disabled = !this._menuPanelManager.CanGoBackToPreviousMenuPanel();
+        this._goBackButton.Pressed += GoBackButtonOnPressed;
+        this._menuPanelManager.WentBackToPreviousMenuPanel += MenuPanelManagerOnWentBackToPreviousMenuPanel;
+        this._menuPanelManager.NewMenuPanelAdded += MenuPanelManagerOnNewMenuPanelAdded;
     }
+
+    private void MenuPanelManagerOnWentBackToPreviousMenuPanel()
+    {
+        this.UpdateButtonState();
+    }
+
+    private void MenuPanelManagerOnNewMenuPanelAdded(MenuPanel newMenuPanel)
+    {
+        this.UpdateButtonState();
+    }
+
+    private void GoBackButtonOnPressed()
+    {
+        this._menuPanelManager.GoBackToPreviousMenuPanel();
+    }
+
+    private void UpdateButtonState()
+    {
+        this._goBackButton.Disabled = !this._menuPanelManager.CanGoBackToPreviousMenuPanel();
+    }
+    
 }

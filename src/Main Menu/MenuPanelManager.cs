@@ -8,6 +8,12 @@ public partial class MenuPanelManager : Control
 {
     [Export] private PackedScene _startMenuPanel;
 
+    [Signal]
+    public delegate void NewMenuPanelAddedEventHandler(MenuPanel newMenuPanel);
+    
+    [Signal]
+    public delegate void WentBackToPreviousMenuPanelEventHandler();
+    
     public override void _Ready()
     {
         base._Ready();
@@ -48,6 +54,11 @@ public partial class MenuPanelManager : Control
         {
             this.GoBackToPreviousMenuPanel();
         }
+    }
+
+    public bool CanGoBackToPreviousMenuPanel()
+    {
+         return this.GetChildren().OfType<MenuPanel>().Count() > 1;
     }
 
     private void ConnectToMenuPanel(MenuPanel menuPanel)

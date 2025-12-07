@@ -39,7 +39,10 @@ public static class ServerDiscoveryResponder
         catch (OperationCanceledException)
         {
         }
-        
+        finally
+        {
+            StopRespondingDiscoveryRequests();
+        }
     }
 
     public static void StopRespondingDiscoveryRequests()

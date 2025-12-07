@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://efh523if7yh2" path="res://src/Main Menu/Menu.cs" id="1_rh4ot"]
 [ext_resource type="Script" uid="uid://dtwi5vptti85o" path="res://src/Main Menu/MenuPanelManager.cs" id="2_fxm7c"]
-[ext_resource type="PackedScene" uid="uid://bsj25iboqut2f" path="res://src/LobbyTypeSelectionPanel.tscn" id="3_mjtu0"]
+[ext_resource type="PackedScene" uid="uid://bsj25iboqut2f" path="res://src/Main Menu/Lobby Type Selection/LobbyTypeSelectionPanel.tscn" id="3_mjtu0"]
 
 [node name="App" type="Node"]
 

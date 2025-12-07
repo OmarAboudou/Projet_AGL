@@ -19,12 +19,15 @@ public static class ServerDiscoveryRequester
     public delegate void ServerDiscovered(string ip, int port);
     public static event ServerDiscovered OnServerDiscovered;
     
-    private static readonly CancellationTokenSource _cancellationTokenSource = new();
+    private static CancellationTokenSource _cancellationTokenSource;
     
     public static async void SearchServer()
     {
+        if(_cancellationTokenSource != null) return;
+
         try
         {
+            _cancellationTokenSource = new();
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
             using UdpClient client = new();
             client.EnableBroadcast = true;
@@ -39,6 +42,10 @@ public static class ServerDiscoveryRequester
         catch (Exception e)
         {
             GD.PrintErr(e);
+        }
+        finally
+        {
+            _cancellationTokenSource = null;
         }
     }
 
@@ -65,6 +72,7 @@ public static class ServerDiscoveryRequester
 
     public static void StopSearchingServer()
     {
-        _cancellationTokenSource.CancelAsync();
+        _cancellationTokenSource?.CancelAsync();
+        _cancellationTokenSource = null;
     }
 }

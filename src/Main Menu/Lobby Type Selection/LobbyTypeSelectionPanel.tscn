@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bsj25iboqut2f"]
+[gd_scene load_steps=3 format=3 uid="uid://bsj25iboqut2f"]
 
-[ext_resource type="Script" uid="uid://cl2j10swmtjv" path="res://src/LobbyTypeSelectionPanel.cs" id="1_4hecv"]
+[ext_resource type="Script" uid="uid://cl2j10swmtjv" path="res://src/Main Menu/Lobby Type Selection/LobbyTypeSelectionPanel.cs" id="1_4hecv"]
+[ext_resource type="PackedScene" uid="uid://c0odefopeta50" path="res://src/Main Menu/Lobby/LobbyPanel.tscn" id="2_r1a8f"]
 
 [node name="LobbyTypeSelectionPanel" type="Control" node_paths=PackedStringArray("_joinButton", "_hostButton")]
 layout_mode = 3
@@ -12,6 +13,7 @@ grow_vertical = 2
 script = ExtResource("1_4hecv")
 _joinButton = NodePath("VBoxContainer/JoinLobbyButton")
 _hostButton = NodePath("VBoxContainer/HostLobbyButton")
+_lobbyPanelScene = ExtResource("2_r1a8f")
 metadata/_custom_type_script = "uid://cl2j10swmtjv"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
