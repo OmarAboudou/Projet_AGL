@@ -1,5 +1,5 @@
 using System;
-using System.Drawing;
+using Godot;
 
 public readonly struct PlayerData(int peerId, String playerName, Color playerColor)
 {

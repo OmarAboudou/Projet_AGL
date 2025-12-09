@@ -37,6 +37,8 @@ public partial class PlayerSlot : Control
         this.Reset();
     }
 
+    public PlayerData CreatePlayerData() => new(this.GetMultiplayerAuthority(), this._playerNameLineEdit.Text, this._colorPickerButton.Color);
+    
     private void ShowConnected()
     {        
         this.IsOccupied = true;
