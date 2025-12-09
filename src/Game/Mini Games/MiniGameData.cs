@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Mini_Games;
+namespace Game.Mini_Games;
 
 [GlobalClass]
 public partial class MiniGameData : Resource

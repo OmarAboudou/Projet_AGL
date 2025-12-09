@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MiniGameData" load_steps=4 format=3 uid="uid://cigs4u7piev12"]
 
-[ext_resource type="Script" uid="uid://c2j7fihjdnxso" path="res://src/Mini Games/MiniGameData.cs" id="1_cflgm"]
+[ext_resource type="Script" uid="uid://c2j7fihjdnxso" path="res://src/Game/Mini Games/MiniGameData.cs" id="1_cflgm"]
 
 [sub_resource type="Gradient" id="Gradient_cflgm"]
 interpolation_mode = 1

@@ -1,3 +1,3 @@
 [gd_scene format=3 uid="uid://bstblg1o5hvm5"]
 
-[node name="TestMiniGameScene" type="Node2D"]
+[node name="TestMiniGame" type="Node2D"]

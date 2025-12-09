@@ -38,6 +38,8 @@ public partial class HorizontalAutoScrollerContainer : ScrollContainer
         base._Ready();
         this.InitializeControlToScroll();
         this.ChildOrderChanged += this.InitializeControlToScroll;
+        this.VerticalScrollMode = ScrollMode.Disabled;
+        this.HorizontalScrollMode = ScrollMode.ShowNever;
     }
 
     private void InitializeControlToScroll()
