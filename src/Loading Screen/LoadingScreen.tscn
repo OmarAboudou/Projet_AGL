@@ -32,8 +32,9 @@ _data = {
 &"Rotate": SubResource("Animation_0lxlp")
 }
 
-[sub_resource type="Animation" id="Animation_a0fov"]
-length = 0.001
+[sub_resource type="Animation" id="Animation_jjdk7"]
+resource_name = "FadeToBlackAnimation"
+length = 3.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -41,10 +42,10 @@ tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_4tb2w"]
@@ -62,8 +63,8 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_jjdk7"]
-resource_name = "FadeToBlackAnimation"
+[sub_resource type="Animation" id="Animation_a0fov"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -71,10 +72,10 @@ tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_a0fov"]
@@ -117,7 +118,6 @@ offset_left = 40.0
 offset_top = -32.0
 offset_right = 104.0
 offset_bottom = 32.0
-rotation = 3.9555333
 pivot_offset = Vector2(-40, 32)
 texture = SubResource("GradientTexture2D_jfgku")
 

@@ -7,20 +7,19 @@ public partial class PlayerSlot : Control
 {
     [Export] private Control _emptySlotControl;
     [Export] private Control _nonEmptySlotControl;
+    [Export] private ColorPickerButton _colorPickerButton;
     [Export] private LineEdit _playerNameLineEdit;
     [Export] private Button _readyButton;
-    [Export] private string _defaultPlayerName;
     
-    [Export]
-    public bool IsOccupied { get; private set; }
+    [Export] private Color _defaultPlayerColor;
+    [Export] private string _defaultPlayerName;
+
+    [Export] public bool IsOccupied { get; private set; }
 
     public override void _Ready()
     {
         base._Ready();
-        this._playerNameLineEdit.SetText(this._defaultPlayerName);
-        this.IsOccupied = false;
-        this._emptySlotControl.Show();
-        this._nonEmptySlotControl.Hide();
+        this.Reset();
     }
 
     public void SetPeer(int peerId)
@@ -32,8 +31,7 @@ public partial class PlayerSlot : Control
 
     public void ClearPeer()
     {
-        this.SetMultiplayerAuthority(1);
-        this.ShowEmpty();
+        this.Reset();
     }
 
     private void ShowConnected()
@@ -41,13 +39,6 @@ public partial class PlayerSlot : Control
         this.IsOccupied = true;
         this._emptySlotControl.Hide();
         this._nonEmptySlotControl.Show();
-    }
-
-    private void ShowEmpty()
-    {
-        this.IsOccupied = false;
-        this._emptySlotControl.Show();
-        this._nonEmptySlotControl.Hide();        
     }
 
     private void UpdateEditableState()
@@ -61,5 +52,15 @@ public partial class PlayerSlot : Control
     private bool IsAuthority()
     {
         return this.GetMultiplayerAuthority() == Multiplayer.MultiplayerPeer.GetUniqueId();
+    }
+
+    private void Reset()
+    {
+        this.SetMultiplayerAuthority(1);
+        this._playerNameLineEdit.SetText(this._defaultPlayerName);
+        this._colorPickerButton.Color = this._defaultPlayerColor;
+        this.IsOccupied = false;
+        this._emptySlotControl.Show();
+        this._nonEmptySlotControl.Hide();
     }
 }
