@@ -1,11 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://c0odefopeta50"]
+[gd_scene load_steps=9 format=3 uid="uid://c0odefopeta50"]
 
 [ext_resource type="Script" uid="uid://ge4i012nroai" path="res://src/Main Menu/Lobby/LobbyPanel.cs" id="1_d5lak"]
 [ext_resource type="Script" uid="uid://cootmrds10mhi" path="res://src/Main Menu/Lobby/PlayerSlotsManager.cs" id="2_d5lak"]
 [ext_resource type="PackedScene" uid="uid://bb6nvh0uk7uaj" path="res://src/Main Menu/Lobby/PlayerSlot.tscn" id="3_d5lak"]
-[ext_resource type="Script" uid="uid://trb0vgtpdxuo" path="res://src/Main Menu/Lobby/HorizontalAutoScrollerContainer.cs" id="4_4b3gr"]
+[ext_resource type="Script" uid="uid://trb0vgtpdxuo" path="res://src/Custom Nodes/HorizontalAutoScrollerContainer.cs" id="4_4b3gr"]
+[ext_resource type="Script" uid="uid://sskrpljiuncb" path="res://src/Main Menu/Lobby/MiniGameSlot.cs" id="4_vxb6s"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4b3gr"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vxb6s"]
 bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Gradient" id="Gradient_4b3gr"]
@@ -96,56 +97,68 @@ columns = 8
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("4_vxb6s")
 
 [node name="BackgroundPanel" type="PanelContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_left = 9.0
+offset_top = 9.0
+offset_right = 129.0
+offset_bottom = 143.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vxb6s")
 
-[node name="Label" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel/MarginContainer"]
 layout_mode = 2
 text = "EMPTY"
 horizontal_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="HorizontalAutoScrollerContainer" type="ScrollContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel/MarginContainer"]
 layout_mode = 2
-scroll_horizontal = 206
+
+[node name="HorizontalAutoScrollerContainer" type="ScrollContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 script = ExtResource("4_4b3gr")
 ScrollDuration = 2.0
-PausesDuration = 5.0
+PausesDuration = 2.0
 metadata/_custom_type_script = "uid://trb0vgtpdxuo"
 
-[node name="Label" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer/HorizontalAutoScrollerContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel/MarginContainer/VBoxContainer/HorizontalAutoScrollerContainer"]
 layout_mode = 2
 text = "{VERY LONG MINI GAME TITLE ON PURPOSE}"
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer"]
+[node name="Control" type="Control" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_4b3gr")
 
-[node name="NoImagelabel" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer/PanelContainer"]
-layout_mode = 2
+[node name="NoImagelabel" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel/MarginContainer/VBoxContainer/Control"]
+layout_mode = 0
+offset_top = 21.0
+offset_right = 104.0
+offset_bottom = 70.0
 text = "NO
 IMAGE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer/PanelContainer"]
-layout_mode = 2
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel/MarginContainer/VBoxContainer/Control"]
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 91.0
 size_flags_vertical = 3
 texture = SubResource("GradientTexture2D_vxb6s")
-stretch_mode = 5
+stretch_mode = 6
+
+[node name="Button" type="Button" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel"]
+layout_mode = 2
+toggle_mode = true
+button_mask = 0
+flat = true

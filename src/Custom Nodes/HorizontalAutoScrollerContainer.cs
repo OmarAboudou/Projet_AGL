@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Main_Menu.Lobby;
+namespace Custom_Nodes;
 
 [Tool, GlobalClass]
 public partial class HorizontalAutoScrollerContainer : ScrollContainer
@@ -47,6 +47,8 @@ public partial class HorizontalAutoScrollerContainer : ScrollContainer
     
     private void ScrollRatio(float ratio)
     {
+        if(this._controlToScroll == null) return;
+        
         float horizontalSizeDelta = this._controlToScroll.Size.X - this.Size.X;
         this.ScrollHorizontal = Mathf.RoundToInt(horizontalSizeDelta * ratio);
     }
