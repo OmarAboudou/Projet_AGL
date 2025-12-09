@@ -33,13 +33,24 @@ public partial class HorizontalAutoScrollerContainer : ScrollContainer
     private float _scrollDuration = 2;
     private float _pausesDuration = 2;
 
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+        this.VerticalScrollMode = ScrollMode.Disabled;
+        this.HorizontalScrollMode = ScrollMode.ShowNever;
+        this.ChildOrderChanged += this.InitializeControlToScroll;
+    }
+
     public override void _Ready()
     {
         base._Ready();
         this.InitializeControlToScroll();
-        this.ChildOrderChanged += this.InitializeControlToScroll;
-        this.VerticalScrollMode = ScrollMode.Disabled;
-        this.HorizontalScrollMode = ScrollMode.ShowNever;
+    }
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        this.ChildOrderChanged -= this.InitializeControlToScroll;
     }
 
     private void InitializeControlToScroll()
