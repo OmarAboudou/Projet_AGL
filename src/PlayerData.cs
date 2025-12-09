@@ -1,9 +1,9 @@
 using System;
 using Godot;
 
-public readonly struct PlayerData(int peerId, String playerName, Color playerColor)
+public partial class PlayerData(int peerId = 0, String playerName = "", Color playerColor = default) : RefCounted
 {
-    public readonly int PeerId = peerId;
-    public readonly string PlayerName = playerName;
-    public readonly Color PlayerColor = playerColor;
+    public int PeerId = peerId;
+    public string PlayerName = playerName;
+    public Color PlayerColor = playerColor;
 }

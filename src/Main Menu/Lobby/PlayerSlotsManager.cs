@@ -9,6 +9,8 @@ public partial class PlayerSlotsManager : Control
     public Array<PlayerSlot> PlayerSlots { get; private set; } = new();
     [Export] private Control _playerSlotsContainer;
 
+    [Signal] public delegate void EveryPlayerIsReadyEventHandler(PlayerData[] playerDatas);
+    
     public override void _Ready()
     {
         base._Ready();
