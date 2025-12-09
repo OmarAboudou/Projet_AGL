@@ -62,4 +62,4 @@ _defaultPlayerName = "Player 4"
 [node name="MiniGamesSelector" type="Control" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 8.0
+size_flags_stretch_ratio = 5.0
