@@ -1,3 +1,4 @@
+using Game.Players;
 using Godot;
 
 namespace Main_Menu.Lobby;
