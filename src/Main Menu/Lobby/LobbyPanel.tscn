@@ -41,18 +41,22 @@ alignment = 1
 
 [node name="PlayerSlot1" parent="VBoxContainer/PlayerSlotsManager/HBoxContainer" instance=ExtResource("3_d5lak")]
 layout_mode = 2
+_defaultPlayerColor = Color(1, 0, 0, 1)
 _defaultPlayerName = "Player 1"
 
 [node name="PlayerSlot2" parent="VBoxContainer/PlayerSlotsManager/HBoxContainer" instance=ExtResource("3_d5lak")]
 layout_mode = 2
+_defaultPlayerColor = Color(0, 1, 0, 1)
 _defaultPlayerName = "Player 2"
 
 [node name="PlayerSlot3" parent="VBoxContainer/PlayerSlotsManager/HBoxContainer" instance=ExtResource("3_d5lak")]
 layout_mode = 2
+_defaultPlayerColor = Color(0, 0, 1, 1)
 _defaultPlayerName = "Player 3"
 
 [node name="PlayerSlot4" parent="VBoxContainer/PlayerSlotsManager/HBoxContainer" instance=ExtResource("3_d5lak")]
 layout_mode = 2
+_defaultPlayerColor = Color(1, 1, 1, 1)
 _defaultPlayerName = "Player 4"
 
 [node name="MiniGamesSelector" type="Control" parent="VBoxContainer"]
