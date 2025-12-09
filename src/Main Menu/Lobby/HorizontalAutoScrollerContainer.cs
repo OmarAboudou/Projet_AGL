@@ -36,9 +36,15 @@ public partial class HorizontalAutoScrollerContainer : ScrollContainer
     public override void _Ready()
     {
         base._Ready();
-        this._controlToScroll = this.GetChild<Control>(0);
-        }
+        this.InitializeControlToScroll();
+        this.ChildOrderChanged += this.InitializeControlToScroll;
+    }
 
+    private void InitializeControlToScroll()
+    {
+        this._controlToScroll = this.GetChild<Control>(0);
+    }
+    
     private void ScrollRatio(float ratio)
     {
         float horizontalSizeDelta = this._controlToScroll.Size.X - this.Size.X;
@@ -50,10 +56,8 @@ public partial class HorizontalAutoScrollerContainer : ScrollContainer
         this._scrollTween?.Kill();
         this._scrollTween = this.CreateTween();
         this._scrollTween.SetLoops();
-        this._scrollTween.TweenMethod(Callable.From<float>(this.ScrollRatio), 0f, 1f, this.ScrollDuration);
-        this._scrollTween.TweenInterval(this.PausesDuration);
-        this._scrollTween.TweenMethod(Callable.From<float>(this.ScrollRatio), 1f, 0f, this.ScrollDuration);
-        this._scrollTween.TweenInterval(this.PausesDuration);
+        this._scrollTween.TweenMethod(Callable.From<float>(this.ScrollRatio), 0f, 1f, this.ScrollDuration).SetDelay(this.PausesDuration);
+        this._scrollTween.TweenMethod(Callable.From<float>(this.ScrollRatio), 1f, 0f, this.ScrollDuration).SetDelay(this.PausesDuration);
     }
     
     

@@ -120,15 +120,17 @@ grow_vertical = 2
 
 [node name="HorizontalAutoScrollerContainer" type="ScrollContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer"]
 layout_mode = 2
+scroll_horizontal = 206
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 script = ExtResource("4_4b3gr")
+ScrollDuration = 2.0
+PausesDuration = 5.0
 metadata/_custom_type_script = "uid://trb0vgtpdxuo"
 
-[node name="MiniGameTitleLabel" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer/HorizontalAutoScrollerContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer/HorizontalAutoScrollerContainer"]
 layout_mode = 2
-text = "{VERY LONG GAME TITLE FOR TEST PURPOSE}"
-horizontal_alignment = 1
+text = "{VERY LONG MINI GAME TITLE ON PURPOSE}"
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer"]
 layout_mode = 2
