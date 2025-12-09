@@ -15,10 +15,13 @@ public partial class PlayerSlot : Control
     [Export] private string _defaultPlayerName;
 
     [Export] public bool IsOccupied { get; private set; }
+    
+    [Signal] public delegate void ReadyStateChangedEventHandler(bool value);
 
     public override void _Ready()
     {
         base._Ready();
+        this._readyButton.Toggled += this.EmitSignalReadyStateChanged;
         this.Reset();
     }
 
@@ -57,6 +60,7 @@ public partial class PlayerSlot : Control
     private void Reset()
     {
         this.SetMultiplayerAuthority(1);
+        this._readyButton.ButtonPressed = false;
         this._playerNameLineEdit.SetText(this._defaultPlayerName);
         this._colorPickerButton.Color = this._defaultPlayerColor;
         this.IsOccupied = false;
