@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -56,6 +57,24 @@ public partial class PlayerSlotsManager : Control
                return;
            }
         }
+    }
+
+    public void ListenToSlots()
+    {
+        foreach (PlayerSlot playerSlot in PlayerSlots)
+        {
+            playerSlot.ReadyStateChanged += this.OnSomePlayerStateChanged;
+        }
+    }
+
+    private void OnSomePlayerStateChanged(bool ignored)
+    {
+        foreach (PlayerSlot playerSlot in PlayerSlots)
+        {
+            if(!playerSlot.IsOccupied) return;
+            if(!playerSlot.IsReady()) return;
+        }
+        this.EmitSignalEveryPlayerIsReady(PlayerSlots.Select(slot => slot.CreatePlayerData()).ToArray());
     }
 
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable, CallLocal = true)]

@@ -23,6 +23,7 @@ public partial class LobbyPanel : MenuPanel
             Multiplayer.PeerConnected += this.ServerOnPeerConnected;
             Multiplayer.PeerDisconnected += this.ServerOnPeerDisconnected;
             this.ServerOnPeerConnected(1);
+            this._playerSlotsManager.ListenToSlots();
         }
         else
         {

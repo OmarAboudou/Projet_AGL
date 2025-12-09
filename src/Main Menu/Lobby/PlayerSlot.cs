@@ -38,6 +38,8 @@ public partial class PlayerSlot : Control
     }
 
     public PlayerData CreatePlayerData() => new(this.GetMultiplayerAuthority(), this._playerNameLineEdit.Text, this._colorPickerButton.Color);
+
+    public bool IsReady() => this._readyButton.ButtonPressed;
     
     private void ShowConnected()
     {        
