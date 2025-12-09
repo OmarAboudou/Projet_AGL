@@ -1,13 +1,17 @@
+using Game.Mini_Games;
+using Game.Players;
 using Godot;
 
 namespace Game;
 
 public partial class GameManager : Node
 {
-    private GameConfigurationData _configurationData;    
+    [Export] private PlayerData[] _players;
+    [Export] private MiniGameData[] _miniGames;
     
-    public void Initialize(GameConfigurationData config)
+    public void Initialize(PlayerData[] players, MiniGameData[] miniGames)
     {
-        this._configurationData = config;
+        this._players = players;
+        this._miniGames = miniGames;
     }
 }

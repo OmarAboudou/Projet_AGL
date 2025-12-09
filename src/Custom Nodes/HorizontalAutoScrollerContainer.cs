@@ -39,6 +39,7 @@ public partial class HorizontalAutoScrollerContainer : ScrollContainer
         this.VerticalScrollMode = ScrollMode.Disabled;
         this.HorizontalScrollMode = ScrollMode.ShowNever;
         this.ChildOrderChanged += this.InitializeControlToScroll;
+        this.RecomputeTween();
     }
 
     public override void _Ready()
@@ -51,11 +52,12 @@ public partial class HorizontalAutoScrollerContainer : ScrollContainer
     {
         base._ExitTree();
         this.ChildOrderChanged -= this.InitializeControlToScroll;
+        this._scrollTween?.Kill();
     }
 
     private void InitializeControlToScroll()
     {
-        this._controlToScroll = this.GetChild<Control>(0);
+        this._controlToScroll = this.GetChildOrNull<Control>(0);
     }
     
     private void ScrollRatio(float ratio)
