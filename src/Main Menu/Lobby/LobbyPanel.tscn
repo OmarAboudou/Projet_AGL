@@ -1,8 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://c0odefopeta50"]
+[gd_scene load_steps=8 format=3 uid="uid://c0odefopeta50"]
 
 [ext_resource type="Script" uid="uid://ge4i012nroai" path="res://src/Main Menu/Lobby/LobbyPanel.cs" id="1_d5lak"]
 [ext_resource type="Script" uid="uid://cootmrds10mhi" path="res://src/Main Menu/Lobby/PlayerSlotsManager.cs" id="2_d5lak"]
 [ext_resource type="PackedScene" uid="uid://bb6nvh0uk7uaj" path="res://src/Main Menu/Lobby/PlayerSlot.tscn" id="3_d5lak"]
+[ext_resource type="Script" uid="uid://trb0vgtpdxuo" path="res://src/Main Menu/Lobby/HorizontalAutoScrollerContainer.cs" id="4_4b3gr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4b3gr"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Gradient" id="Gradient_4b3gr"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vxb6s"]
+gradient = SubResource("Gradient_4b3gr")
 
 [node name="LobbyPanel" type="Control" node_paths=PackedStringArray("_playerSlotsManager")]
 layout_mode = 3
@@ -63,3 +72,78 @@ _defaultPlayerName = "Player 4"
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 5.0
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MiniGamesSelector"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer"]
+layout_mode = 2
+columns = 8
+
+[node name="MiniGameSlot" type="Control" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackgroundPanel" type="PanelContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel"]
+layout_mode = 2
+text = "EMPTY"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HorizontalAutoScrollerContainer" type="ScrollContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 0
+script = ExtResource("4_4b3gr")
+metadata/_custom_type_script = "uid://trb0vgtpdxuo"
+
+[node name="MiniGameTitleLabel" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer/HorizontalAutoScrollerContainer"]
+layout_mode = 2
+text = "{VERY LONG GAME TITLE FOR TEST PURPOSE}"
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_4b3gr")
+
+[node name="NoImagelabel" type="Label" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer/PanelContainer"]
+layout_mode = 2
+text = "NO
+IMAGE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/VBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+texture = SubResource("GradientTexture2D_vxb6s")
+stretch_mode = 5
