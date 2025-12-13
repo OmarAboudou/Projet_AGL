@@ -2,7 +2,7 @@ using Godot;
 
 namespace Custom_Nodes;
 
-[Tool, GlobalClass]
+[GlobalClass]
 public partial class HorizontalAutoScrollerContainer : ScrollContainer
 {
     private Control _controlToScroll;

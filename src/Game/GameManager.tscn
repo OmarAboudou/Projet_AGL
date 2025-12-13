@@ -1,8 +1,38 @@
-[gd_scene load_steps=6 format=3 uid="uid://btx54i2dh37ph"]
+[gd_scene load_steps=16 format=3 uid="uid://btx54i2dh37ph"]
 
 [ext_resource type="Script" uid="uid://dp1v00haeaqe1" path="res://src/Game/GameManager.cs" id="1_jwu8t"]
 [ext_resource type="Script" uid="uid://cdit7xivj4f1g" path="res://src/Game/Loading Screen/MiniGameLoadingScreen.cs" id="2_7inf7"]
+[ext_resource type="Script" uid="uid://d2h7wqmlp4okj" path="res://src/Game/Players/PlayerData.cs" id="2_ordn5"]
+[ext_resource type="Resource" uid="uid://cigs4u7piev12" path="res://src/Game/Mini Games/Test/TestMiniGame.tres" id="3_ordn5"]
 [ext_resource type="PackedScene" uid="uid://c5hs54y5fkebh" path="res://src/Game/Loading Screen/MiniGameLoadingScreenPlayerSlot.tscn" id="4_ordn5"]
+
+[sub_resource type="Resource" id="Resource_7d2pp"]
+script = ExtResource("2_ordn5")
+PeerId = 1
+PlayerName = "P1"
+PlayerColor = Color(1, 0, 0, 1)
+metadata/_custom_type_script = "uid://d2h7wqmlp4okj"
+
+[sub_resource type="Resource" id="Resource_phy75"]
+script = ExtResource("2_ordn5")
+PeerId = 2
+PlayerName = "P2"
+PlayerColor = Color(0, 1, 0, 1)
+metadata/_custom_type_script = "uid://d2h7wqmlp4okj"
+
+[sub_resource type="Resource" id="Resource_t2qww"]
+script = ExtResource("2_ordn5")
+PeerId = 3
+PlayerName = "P3"
+PlayerColor = Color(0, 0, 1, 1)
+metadata/_custom_type_script = "uid://d2h7wqmlp4okj"
+
+[sub_resource type="Resource" id="Resource_iqt3q"]
+script = ExtResource("2_ordn5")
+PeerId = 4
+PlayerName = "P4"
+PlayerColor = Color(1, 1, 1, 1)
+metadata/_custom_type_script = "uid://d2h7wqmlp4okj"
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ag4ms"]
 noise_type = 2
@@ -15,10 +45,67 @@ domain_warp_type = 1
 noise = SubResource("FastNoiseLite_ag4ms")
 invert = true
 
-[node name="GameManager" type="Node"]
-script = ExtResource("1_jwu8t")
+[sub_resource type="Animation" id="Animation_jjdk7"]
+resource_name = "FadeToBlackAnimation"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
 
-[node name="MiniGameLoadingScreen" type="PanelContainer" parent="." node_paths=PackedStringArray("_miniGameLoadingScreenPlayerSlotContainer", "_miniGameNameLabel", "_miniGameDescriptionLabel", "_miniGameTextureRect")]
+[sub_resource type="Animation" id="Animation_4tb2w"]
+resource_name = "FadeToBlack"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_a0fov"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a0fov"]
+_data = {
+&"FadeToBlackAnimation": SubResource("Animation_jjdk7"),
+&"FadeToTransparentAnimation": SubResource("Animation_4tb2w"),
+&"RESET": SubResource("Animation_a0fov")
+}
+
+[node name="GameManager" type="Node" node_paths=PackedStringArray("_loadingScreen")]
+script = ExtResource("1_jwu8t")
+_players = Array[Object]([SubResource("Resource_7d2pp"), SubResource("Resource_phy75"), SubResource("Resource_t2qww"), SubResource("Resource_iqt3q")])
+_miniGames = Array[Object]([ExtResource("3_ordn5"), ExtResource("3_ordn5")])
+_loadingScreen = NodePath("MiniGameLoadingScreen")
+
+[node name="MiniGameLoadingScreen" type="PanelContainer" parent="." node_paths=PackedStringArray("_miniGameLoadingScreenPlayerSlotContainer", "_miniGameNameLabel", "_miniGameDescriptionLabel", "_miniGameTextureRect", "_fadeAnimationPlayer")]
+modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -32,6 +119,7 @@ _miniGameLoadingScreenPlayerSlotContainer = NodePath("VBoxContainer/BottomBar/Ce
 _miniGameNameLabel = NodePath("VBoxContainer/TopBar/MarginContainer/PanelContainer/MarginContainer/MiniGameName")
 _miniGameDescriptionLabel = NodePath("VBoxContainer/Middle/HBoxContainer/MarginContainer1/ScrollContainer/DescriptionRichTextLabel")
 _miniGameTextureRect = NodePath("VBoxContainer/Middle/HBoxContainer/MarginContainer/MiniGameTexture")
+_fadeAnimationPlayer = NodePath("FadeAnimationPlayer")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MiniGameLoadingScreen"]
 layout_mode = 2
@@ -141,3 +229,8 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 32
 alignment = 1
+
+[node name="FadeAnimationPlayer" type="AnimationPlayer" parent="MiniGameLoadingScreen"]
+libraries = {
+&"": SubResource("AnimationLibrary_a0fov")
+}

@@ -124,7 +124,7 @@ layout_mode = 2
 
 [node name="HorizontalAutoScrollerContainer" type="ScrollContainer" parent="VBoxContainer/MiniGamesSelector/PanelContainer/MarginContainer/GridContainer/MiniGameSlot/BackgroundPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-scroll_horizontal = 229
+scroll_horizontal = 100
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 script = ExtResource("4_4b3gr")

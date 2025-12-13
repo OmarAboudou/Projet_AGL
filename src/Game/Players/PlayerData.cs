@@ -8,7 +8,7 @@ public partial class PlayerData : Resource
 {
     [Export] public int PeerId;
     [Export] public string PlayerName;
-    [Export] public Color PlayerColor;
+    [Export] public Color PlayerColor = Colors.Black;
     private readonly int _peerId;
     private readonly String _playerName;
     private readonly Color _playerColor;

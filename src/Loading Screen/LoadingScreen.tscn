@@ -95,8 +95,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_jjdk7")
 _fadeAnimationPlayer = NodePath("FadeAnimationPlayer")
-_fadeToTransparentAnimationName = &"FadeToTransparentAnimation"
-_fadeToBlackAnimationName = &"FadeToBlackAnimation"
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1

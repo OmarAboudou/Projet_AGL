@@ -1,3 +1,12 @@
-[gd_scene format=3 uid="uid://bstblg1o5hvm5"]
+[gd_scene load_steps=2 format=3 uid="uid://bstblg1o5hvm5"]
 
-[node name="TestMiniGame" type="Node2D"]
+[ext_resource type="Script" uid="uid://byi45sgm21d6o" path="res://src/Game/Mini Games/Test/TestMiniGame.cs" id="1_g7lok"]
+
+[node name="TestMiniGame" type="Node2D" node_paths=PackedStringArray("_timer")]
+script = ExtResource("1_g7lok")
+_timer = NodePath("Timer")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+autostart = true
