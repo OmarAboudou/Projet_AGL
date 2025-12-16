@@ -17,7 +17,7 @@ public static class ServerDiscoveryResponder
     {
         try
         {
-            string ipAddress = IP.GetLocalAddresses()[0];
+            string ipAddress = IP.GetLocalAddresses()[1];
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
             using UdpClient server = new(SERVER_PORT);
             Dictionary responseDictionary = new()
