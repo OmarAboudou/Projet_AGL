@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ public static class ServerDiscoveryResponder
     {
         try
         {
-            string[] ipAddresses = IP.GetLocalAddresses();
+            string[] ipAddresses = IP.GetLocalAddresses().SkipLast(2).ToArray();
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
             using UdpClient server = new(SERVER_PORT);
             while (!cancellationToken.IsCancellationRequested)
