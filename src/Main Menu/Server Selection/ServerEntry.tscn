@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://q6spn1g8igc4"]
+
+[ext_resource type="Script" uid="uid://72s0h2fy38sc" path="res://src/Main Menu/Server Selection/ServerEntry.cs" id="1_k4eeq"]
+
+[node name="ServerEntry" type="Control" node_paths=PackedStringArray("_ipAddressLabel", "_portLabel", "_connectButton")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_k4eeq")
+_ipAddressLabel = NodePath("HBoxContainer/IpAddress")
+_portLabel = NodePath("HBoxContainer/Port")
+_connectButton = NodePath("HBoxContainer/Connect")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="IpAddress" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "{localhost}"
+
+[node name="Colon" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = ":"
+
+[node name="Port" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "{8080}"
+
+[node name="Connect" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "CONNECT"
