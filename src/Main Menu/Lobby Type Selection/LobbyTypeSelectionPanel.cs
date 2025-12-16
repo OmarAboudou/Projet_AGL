@@ -11,6 +11,7 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
     [Export] private Button _joinButton;
     [Export] private Button _hostButton;
     [Export] private PackedScene _lobbyPanelScene;
+    [Export] private PackedScene _serverSelectionPanelScene;
     private bool _isSearching;
 
     public override void _Ready()
