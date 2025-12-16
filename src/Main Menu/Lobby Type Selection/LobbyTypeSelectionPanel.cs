@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using Main_Menu.Lobby;
+using Main_Menu.Server_Selection;
 using Server;
 
 namespace Main_Menu.Lobby_Type_Selection;
@@ -23,15 +24,17 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
 
     private void JoinButtonOnPressed()
     {
-        if(this._isSearching) return;
-        
+        ServerSelectionPanel serverSelectionPanel = this._serverSelectionPanelScene.Instantiate<ServerSelectionPanel>();
+        this.EmitSignalAddNewMenuPanel(serverSelectionPanel);
+        /*if(this._isSearching) return;
+
         LobbyPanel lobbyPanel = this._lobbyPanelScene.Instantiate<LobbyPanel>();
         float timeoutTime = 3f;
         SceneTreeTimer timer = this.GetTree().CreateTimer(timeoutTime);
         ServerDiscoveryRequester.OnServerDiscovered += ServerDiscoveryRequesterOnOnServerDiscovered;
         timer.Timeout += TimerOnTimeout;
         ServerDiscoveryRequester.SearchServer();
-        
+
         void TimerOnTimeout()
         {
             ServerDiscoveryRequester.StopSearchingServer();
@@ -45,13 +48,13 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
 
         void ServerDiscoveryRequesterOnOnServerDiscovered(string ip, int port)
         {
-            
+
             ServerDiscoveryRequester.StopSearchingServer();
             ServerDiscoveryRequester.OnServerDiscovered -= ServerDiscoveryRequesterOnOnServerDiscovered;
             timer.Timeout -= TimerOnTimeout;
             timer.TimeLeft = 0;
             this._isSearching = false;
-            
+
             ENetMultiplayerPeer clientPeer = new();
             Error error = clientPeer.CreateClient(ip, port);
             if (error != Error.Ok)
@@ -60,7 +63,7 @@ public partial class LobbyTypeSelectionPanel : MenuPanel
             }
             Multiplayer.MultiplayerPeer = clientPeer;
             this.EmitSignalAddNewMenuPanel(lobbyPanel);
-        }
+        }*/
     }
 
     private void HostButtonOnPressed()

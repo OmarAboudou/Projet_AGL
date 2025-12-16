@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dwg4j6kqkqsy4" path="res://src/Main Menu/Lobby/PlayerSlot.cs" id="1_x8p8g"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_x8p8g"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kad6j"]
 properties/0/path = NodePath("VBoxContainer/LineEdit:text")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -12,17 +12,17 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath(".:IsOccupied")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-properties/3/path = NodePath("Background:visible")
+properties/3/path = NodePath(".:visible")
 properties/3/spawn = true
 properties/3/replication_mode = 2
-properties/4/path = NodePath("VBoxContainer:visible")
+properties/4/path = NodePath("VBoxContainer/ColorPickerButton:color")
 properties/4/spawn = true
 properties/4/replication_mode = 2
-properties/5/path = NodePath("VBoxContainer/ColorPickerButton:color")
+properties/5/path = NodePath("VBoxContainer:visible")
 properties/5/spawn = true
 properties/5/replication_mode = 2
 
-[node name="PlayerSlot1" type="Control" node_paths=PackedStringArray("_emptySlotControl", "_nonEmptySlotControl", "_colorPickerButton", "_playerNameLineEdit", "_readyButton")]
+[node name="PlayerSlot" type="Control" node_paths=PackedStringArray("_emptySlotControl", "_nonEmptySlotControl", "_colorPickerButton", "_playerNameLineEdit", "_readyButton")]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 3
 anchors_preset = 0
@@ -84,4 +84,4 @@ text = "READY"
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 delta_interval = 1.0
-replication_config = SubResource("SceneReplicationConfig_x8p8g")
+replication_config = SubResource("SceneReplicationConfig_kad6j")

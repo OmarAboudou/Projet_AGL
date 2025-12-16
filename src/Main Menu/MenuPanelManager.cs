@@ -67,6 +67,22 @@ public partial class MenuPanelManager : Control
         menuPanel.AddNewMenuPanel += this.AddNewMenuPanel;
         menuPanel.GoBackToPreviousMenuPanel += this.GoBackToPreviousMenuPanel;
         menuPanel.GoBackToFirstMenuPanel += this.GoBackToFirstMenuPanel;
+
+        if (!menuPanel.IsNodeReady())
+        {
+            menuPanel.Ready += MenuPanelOnReady;
+
+            void MenuPanelOnReady()
+            {
+                menuPanel.Ready -= MenuPanelOnReady;
+                menuPanel.OnPanelIsCurrent();
+            }    
+        }
+        else
+        {
+            menuPanel.OnPanelIsCurrent();
+        }
+        
         menuPanel.Show();
     }
 
