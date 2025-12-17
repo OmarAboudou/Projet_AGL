@@ -1,0 +1,131 @@
+[gd_scene load_steps=8 format=3 uid="uid://duf5hc13b12d3"]
+
+[ext_resource type="Script" uid="uid://cqf1d6wgy278c" path="res://src/Main Menu/Server Selection/ServerSelectionPanel.cs" id="1_bc3xv"]
+[ext_resource type="PackedScene" uid="uid://q6spn1g8igc4" path="res://src/Main Menu/Server Selection/ServerEntry.tscn" id="2_bc3xv"]
+[ext_resource type="Script" uid="uid://h853x23keyf8" path="res://src/Main Menu/Server Selection/ServerEntriesManager.cs" id="2_l83el"]
+[ext_resource type="PackedScene" uid="uid://c0odefopeta50" path="res://src/Main Menu/Lobby/LobbyPanel.tscn" id="2_yca17"]
+
+[sub_resource type="Animation" id="Animation_l83el"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible_characters")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+
+[sub_resource type="Animation" id="Animation_bc3xv"]
+resource_name = "SuspensionsAnimation"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible_characters")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l83el"]
+_data = {
+&"RESET": SubResource("Animation_l83el"),
+&"SuspensionPointsAnimation": SubResource("Animation_bc3xv")
+}
+
+[node name="ServerSelectionPanel" type="Control" node_paths=PackedStringArray("_refreshButton", "_searchingIndicator", "_serverEntriesManager")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bc3xv")
+_refreshButton = NodePath("VBoxContainer/TopPart/PanelContainer/VBoxContainer/Refresh Button")
+_searchingIndicator = NodePath("VBoxContainer/TopPart/PanelContainer/VBoxContainer/SuspensionPoints")
+_serverEntriesManager = NodePath("VBoxContainer/ServerEntriesManager")
+_lobbyPanelScene = ExtResource("2_yca17")
+metadata/_custom_type_script = "uid://bbk3lrtmy0v4m"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TopPart" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/TopPart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TopPart/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Refresh Button" type="Button" parent="VBoxContainer/TopPart/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "REFRESH"
+
+[node name="SuspensionPoints" type="Label" parent="VBoxContainer/TopPart/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+text = "..."
+horizontal_alignment = 1
+vertical_alignment = 1
+visible_characters = 2
+visible_ratio = 0.6666667
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/TopPart/PanelContainer/VBoxContainer/SuspensionPoints"]
+libraries = {
+&"": SubResource("AnimationLibrary_l83el")
+}
+autoplay = "SuspensionPointsAnimation"
+
+[node name="ServerEntriesManager" type="Control" parent="VBoxContainer" node_paths=PackedStringArray("_serverEntryRootNode")]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_l83el")
+_serverEntryScene = ExtResource("2_bc3xv")
+_serverEntryRootNode = NodePath("ScrollContainer/PanelContainer/VBoxContainer")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ServerEntriesManager"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+draw_focus_border = true
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/ServerEntriesManager/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ServerEntriesManager/ScrollContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

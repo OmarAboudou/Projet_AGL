@@ -5,6 +5,11 @@ namespace Main_Menu;
 [GlobalClass]
 public partial class MenuPanel : Control
 {
+    public virtual void OnPanelIsCurrent()
+    {
+        
+    }
+    
     public virtual void OnGoBackFrom()
     {
         
